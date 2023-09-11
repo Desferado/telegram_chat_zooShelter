@@ -3,6 +3,8 @@ package pro.sky.telegram_chat_zooShelter.listener;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import jakarta.annotation.PostConstruct;
@@ -60,5 +62,48 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendMessage sendMess = new SendMessage(chatId, "Выбери то,что тебя интересует");
         sendMess.replyMarkup(preparekeyboardInfoShelter());
         SendResponse response = telegramBot.execute(sendMess);
+    }
+    /* метод создает инлайн клавиатуру после отправки команды Start
+    @return клавиатура подсообщением
+     */
+
+    private InlineKeyboardMarkup preparekeyboardStart() {
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton button1 = new InlineKeyboardButton("Инфо о приюте");
+        InlineKeyboardButton button2 = new InlineKeyboardButton("Как взять питомца");
+        InlineKeyboardButton button3 = new InlineKeyboardButton("Отчет о питомце");
+        InlineKeyboardButton button4 = new InlineKeyboardButton("Позвать волонтера");
+
+        button1.callbackData("ONE");
+        button2.callbackData("TWO");
+        button3.callbackData("THREE");
+        button4.callbackData("FORTH");
+
+        markupInline.addRow(button1, button2);
+        markupInline.addRow(button3, button4);
+
+        return markupInline;
+
+    }
+    /* метод создает инлайн клавиатуру после отправки команды для получения информации о приюте
+      @return клавиатура под сообщением
+     */
+    private InlineKeyboardMarkup preparekeyboardInfoShelter() {
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton button1 = new InlineKeyboardButton("О приюте");
+        InlineKeyboardButton button2 = new InlineKeyboardButton("График работы, адрес");
+        InlineKeyboardButton button3 = new InlineKeyboardButton("Правила приюта");
+        InlineKeyboardButton button4 = new InlineKeyboardButton("Оставить контактные данные");
+
+        button1.callbackData("INFO");
+        button2.callbackData("GRAPHIC");
+        button3.callbackData("RULES");
+        button4.callbackData("CONTACTS");
+
+        markupInline.addRow(button1, button2);
+        markupInline.addRow(button3, button4);
+        return markupInline;
     }
 }
