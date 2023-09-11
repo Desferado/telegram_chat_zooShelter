@@ -1,9 +1,12 @@
 package pro.sky.telegram_chat_zooShelter.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.springframework.data.geo.Point;
 
 import java.util.Objects;
 
@@ -13,33 +16,26 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pets {
+
+public class Shelters {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private int age;
     private String name;
-    private String type_pets;
-    private String breed;
-    @ManyToOne
-    @JoinColumn(name = "id_customer")
-    private Customer customer;
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "id_shelter")
-    private Shelters shelters;
+    private String adress;
+    private String location;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
             return false;
-        Pets pets = (Pets) o;
+        Shelters shelters = (Shelters) o;
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, age, name, type_pets, breed, customer, shelters);
+        return Objects.hash(id, name, adress, location);
     }
 }

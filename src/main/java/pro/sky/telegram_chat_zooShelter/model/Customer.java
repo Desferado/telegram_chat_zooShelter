@@ -1,9 +1,6 @@
 package pro.sky.telegram_chat_zooShelter.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 import lombok.*;
 import java.util.Objects;
@@ -28,10 +25,14 @@ public class Customer {
     private String phone; // тлф формата +70000000000
     private String address; // адрес
     private String email; //почта
+    @OneToMany(mappedBy = "pets")
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
         Customer customer = (Customer) o;
         return false;
     }

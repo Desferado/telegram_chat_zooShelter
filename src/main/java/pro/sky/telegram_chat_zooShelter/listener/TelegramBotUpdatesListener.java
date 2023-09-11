@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pro.sky.telegram_chat_zooShelter.services.KeyBoardService;
 
 import java.util.List;
 
@@ -77,70 +78,15 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
 
     private InlineKeyboardMarkup preparekeyboardStart() {
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-
-        InlineKeyboardButton button1 = new InlineKeyboardButton("Приют кошек");
-        InlineKeyboardButton button2 = new InlineKeyboardButton("Приют собак");
-        InlineKeyboardButton button3 = new InlineKeyboardButton("Позвать волонтера");
-
-        button1.callbackData("CAT");
-        button2.callbackData("DOG");
-        button3.callbackData("CALL_VOLUNTEER");
-
-
-        markupInline.addRow(button1, button2);
-        markupInline.addRow(button3);
-
-        return markupInline;
-
+        return KeyBoardService.preparekeyboardStart("кошек", "собак");
     }
     /* метод создает инлайн клавиатуру после отправки команды для получения информации о приюте
       @return клавиатура под сообщением
      */
     private InlineKeyboardMarkup preparekeyboardInfoCATShelter() {
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-
-        InlineKeyboardButton button1 = new InlineKeyboardButton("О приюте кошек");
-        InlineKeyboardButton button2 = new InlineKeyboardButton("Контакты приюта кошек");
-        InlineKeyboardButton button3 = new InlineKeyboardButton("Контакты охраны");
-        InlineKeyboardButton button4 = new InlineKeyboardButton("Правила");
-        InlineKeyboardButton button5 = new InlineKeyboardButton("Связаться");
-        InlineKeyboardButton button6 = new InlineKeyboardButton("Позвать волонетра");
-
-        button1.callbackData("INFO");
-        button2.callbackData("CONTSHELTER");
-        button3.callbackData("CONTSECURITY");
-        button4.callbackData("RULES");
-        button5.callbackData("CONNECT");
-        button6.callbackData("VOLUNTEER");
-
-
-        markupInline.addRow(button1, button2);
-        markupInline.addRow(button3, button4);
-        markupInline.addRow(button5, button6);
-        return markupInline;
+        return KeyBoardService.preparekeyboardInfoShelter("кошек");
     }
     private InlineKeyboardMarkup preparekeyboardInfoDOGShelter() {
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-
-        InlineKeyboardButton button1 = new InlineKeyboardButton("О приюте собак");
-        InlineKeyboardButton button2 = new InlineKeyboardButton("Контакты приюта собак");
-        InlineKeyboardButton button3 = new InlineKeyboardButton("Контакты охраны");
-        InlineKeyboardButton button4 = new InlineKeyboardButton("Правила");
-        InlineKeyboardButton button5 = new InlineKeyboardButton("Связаться");
-        InlineKeyboardButton button6 = new InlineKeyboardButton("Позвать волонетра");
-
-        button1.callbackData("INFO");
-        button2.callbackData("CONTSHELTER");
-        button3.callbackData("CONTSECURITY");
-        button4.callbackData("RULES");
-        button5.callbackData("CONNECT");
-        button6.callbackData("VOLUNTEER");
-
-
-        markupInline.addRow(button1, button2);
-        markupInline.addRow(button3, button4);
-        markupInline.addRow(button5, button6);
-        return markupInline;
+        return KeyBoardService.preparekeyboardInfoShelter("собак");
     }
 }
