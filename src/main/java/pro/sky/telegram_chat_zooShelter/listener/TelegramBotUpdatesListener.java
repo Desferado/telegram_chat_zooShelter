@@ -66,6 +66,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     case("CONTSHELTER" + "собак"):
                         responseOnCommandContactDogShelter(chatId);
                         break;
+                    case("CONTSECURITY" + "кошек"):
+                        responseOnCommandContactSecurityCatShelter(chatId);
+                        break;
+                    case("CONTSECURITY" + "собак"):
+                        responseOnCommandContactSecurityDogShelter(chatId);
+                        break;
                 }
             }
         });
@@ -145,6 +151,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private void responseOnCommandInfoDog(long chatId) {
 
         SendMessage sendMess = new SendMessage(chatId, aboutDogShelter);
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    private void responseOnCommandContactSecurityCatShelter(long chatId) {
+
+        SendMessage sendMess = new SendMessage(chatId, contactSecurityCatShelter);
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    private void responseOnCommandContactSecurityDogShelter(long chatId) {
+
+        SendMessage sendMess = new SendMessage(chatId, contactSecurityDogShelter);
         SendResponse response = telegramBot.execute(sendMess);
     }
     /***
