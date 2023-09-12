@@ -43,16 +43,22 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 Long chatId = update.callbackQuery().message().chat().id();
                 switch (update.callbackQuery().data()) {
                     case ("CAT"):
-                    responseOnCommandCATShelter(chatId);
-                    break;
+                        responseOnCommandCatShelter(chatId);
+                        break;
                     case ("DOG"):
-                    responseOnCommandDOGShelter(chatId);
-                    break;
+                        responseOnCommandDogShelter(chatId);
+                        break;
                     case ("INFO" + "кошек"):
-                    responseOnCommandInfoCATShelter(chatId);
-                    break;
+                        responseOnCommandInfoCatShelter(chatId);
+                        break;
                     case ("INFO" + "собак"):
                         responseOnCommandInfoDogShelter(chatId);
+                        break;
+                    case("CONTSHELTER" + "кошек"):
+                        responseOnCommandContactCatShelter(chatId);
+                        break;
+                    case("CONTSHELTER" + "собак"):
+                        responseOnCommandContactDogShelter(chatId);
                         break;
                 }
             }
@@ -62,45 +68,65 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private void responseOnCommandStart(long chatId) {
 
         SendMessage sendMess = new SendMessage(chatId, helloText);
-        sendMess.replyMarkup(preparekeyboardStart());
+        sendMess.replyMarkup(prepareKeyboardStart());
         SendResponse response = telegramBot.execute(sendMess);
     }
-    private void responseOnCommandCATShelter(long chatId) {
+
+    private void responseOnCommandCatShelter(long chatId) {
 
         SendMessage sendMess = new SendMessage(chatId, greetingTextCat);
-        sendMess.replyMarkup(preparekeyboardCATShelter());
+        sendMess.replyMarkup(prepareKeyboardCatShelter());
         SendResponse response = telegramBot.execute(sendMess);
     }
-    private void responseOnCommandDOGShelter(long chatId) {
+    private void responseOnCommandDogShelter(long chatId) {
 
         SendMessage sendMess = new SendMessage(chatId, greetingTextDog);
-        sendMess.replyMarkup(preparekeyboardDOGShelter());
+        sendMess.replyMarkup(prepareKeyboardDogShelter());
         SendResponse response = telegramBot.execute(sendMess);
     }
-    private void responseOnCommandInfoCATShelter(long chatId) {
+    private void responseOnCommandInfoCatShelter(long chatId) {
 
-        SendMessage sendMess = new SendMessage(chatId, aboutCatshelter);
+        SendMessage sendMess = new SendMessage(chatId, aboutCatShelter);
+        sendMess.replyMarkup(prepareKeyboardInfoCatShelter());
         SendResponse response = telegramBot.execute(sendMess);
     }
     private void responseOnCommandInfoDogShelter(long chatId) {
 
-        SendMessage sendMess = new SendMessage(chatId, aboutDogshelter);
+        SendMessage sendMess = new SendMessage(chatId, aboutDogShelter);
+        sendMess.replyMarkup(prepareKeyboardInfoDogShelter());
         SendResponse response = telegramBot.execute(sendMess);
     }
-    /* метод создает инлайн клавиатуру после отправки команды Start
+    private void responseOnCommandContactCatShelter(long chatId){
+
+        SendMessage sendMess = new SendMessage(chatId, contactCatShelter);
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    private void responseOnCommandContactDogShelter(long chatId){
+
+        SendMessage sendMess = new SendMessage(chatId, contactDogShelter);
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+
+     /* метод создает инлайн клавиатуру после отправки команды Start
     @return клавиатура подсообщением
      */
 
-    private InlineKeyboardMarkup preparekeyboardStart() {
-        return KeyBoardService.preparekeyboardStart("кошек", "собак");
+    private InlineKeyboardMarkup prepareKeyboardStart() {
+        return KeyBoardService.prepareKeyboardStart("кошек", "собак");
     }
     /* метод создает инлайн клавиатуру после отправки команды для получения информации о приюте
       @return клавиатура под сообщением
      */
-    private InlineKeyboardMarkup preparekeyboardCATShelter() {
-        return KeyBoardService.preparekeyboardShelter("кошек");
+    private InlineKeyboardMarkup prepareKeyboardCatShelter() {
+        return KeyBoardService.prepareKeyboardShelter("кошек");
     }
-    private InlineKeyboardMarkup preparekeyboardDOGShelter() {
-        return KeyBoardService.preparekeyboardShelter("собак");
+    private InlineKeyboardMarkup prepareKeyboardDogShelter() {
+        return KeyBoardService.prepareKeyboardShelter("собак");
+    }
+    private InlineKeyboardMarkup prepareKeyboardInfoCatShelter() {
+        return KeyBoardService.prepareKeyboardInfoShelter("кошек");
+    }
+    private InlineKeyboardMarkup prepareKeyboardInfoDogShelter() {
+        return KeyBoardService.prepareKeyboardInfoShelter("собак");
     }
 }
