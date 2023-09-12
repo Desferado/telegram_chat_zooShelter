@@ -3,7 +3,6 @@ package pro.sky.telegram_chat_zooShelter.listener;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
@@ -15,6 +14,8 @@ import org.springframework.stereotype.Service;
 import pro.sky.telegram_chat_zooShelter.services.KeyBoardService;
 
 import java.util.List;
+
+import static pro.sky.telegram_chat_zooShelter.Constants.*;
 
 @Service
 public class TelegramBotUpdatesListener implements UpdatesListener {
@@ -42,11 +43,17 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 Long chatId = update.callbackQuery().message().chat().id();
                 switch (update.callbackQuery().data()) {
                     case ("CAT"):
-                    responseOnCommandInfoCATShelter(chatId);
+                    responseOnCommandCATShelter(chatId);
                     break;
                     case ("DOG"):
-                    responseOnCommandInfoDOGShelter(chatId);
+                    responseOnCommandDOGShelter(chatId);
                     break;
+                    case ("INFO" + "кошек"):
+                    responseOnCommandInfoCATShelter(chatId);
+                    break;
+                    case ("INFO" + "собак"):
+                        responseOnCommandInfoDogShelter(chatId);
+                        break;
                 }
             }
         });
@@ -54,23 +61,30 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
     private void responseOnCommandStart(long chatId) {
 
-        SendMessage sendMess = new SendMessage(chatId, "Привет друг!" +
-                "\nЯ бот-помощник и помогу познакомится " +
-                "\nс приютом и питомцами." +
-                "\nСначала выбери приют.");
+        SendMessage sendMess = new SendMessage(chatId, helloText);
         sendMess.replyMarkup(preparekeyboardStart());
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    private void responseOnCommandCATShelter(long chatId) {
+
+        SendMessage sendMess = new SendMessage(chatId, greetingTextCat);
+        sendMess.replyMarkup(preparekeyboardCATShelter());
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    private void responseOnCommandDOGShelter(long chatId) {
+
+        SendMessage sendMess = new SendMessage(chatId, greetingTextDog);
+        sendMess.replyMarkup(preparekeyboardDOGShelter());
         SendResponse response = telegramBot.execute(sendMess);
     }
     private void responseOnCommandInfoCATShelter(long chatId) {
 
-        SendMessage sendMess = new SendMessage(chatId, "Выбери то,что тебя интересует");
-        sendMess.replyMarkup(preparekeyboardInfoCATShelter());
+        SendMessage sendMess = new SendMessage(chatId, aboutCatshelter);
         SendResponse response = telegramBot.execute(sendMess);
     }
-    private void responseOnCommandInfoDOGShelter(long chatId) {
+    private void responseOnCommandInfoDogShelter(long chatId) {
 
-        SendMessage sendMess = new SendMessage(chatId, "Выбери то,что тебя интересует");
-        sendMess.replyMarkup(preparekeyboardInfoDOGShelter());
+        SendMessage sendMess = new SendMessage(chatId, aboutDogshelter);
         SendResponse response = telegramBot.execute(sendMess);
     }
     /* метод создает инлайн клавиатуру после отправки команды Start
@@ -83,10 +97,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     /* метод создает инлайн клавиатуру после отправки команды для получения информации о приюте
       @return клавиатура под сообщением
      */
-    private InlineKeyboardMarkup preparekeyboardInfoCATShelter() {
-        return KeyBoardService.preparekeyboardInfoShelter("кошек");
+    private InlineKeyboardMarkup preparekeyboardCATShelter() {
+        return KeyBoardService.preparekeyboardShelter("кошек");
     }
-    private InlineKeyboardMarkup preparekeyboardInfoDOGShelter() {
-        return KeyBoardService.preparekeyboardInfoShelter("собак");
+    private InlineKeyboardMarkup preparekeyboardDOGShelter() {
+        return KeyBoardService.preparekeyboardShelter("собак");
     }
 }

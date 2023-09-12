@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.springframework.data.geo.Point;
+
 
 import java.util.Objects;
 
@@ -21,6 +21,7 @@ public class Shelters {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Getter
     private String name;
     private String adress;
     private String location;
@@ -38,4 +39,15 @@ public class Shelters {
     public int hashCode() {
         return Objects.hash(id, name, adress, location);
     }
+
+    @Override
+    public String toString() {
+        return "Shelters{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", adress='" + adress + '\'' +
+                ", location='" + location + '\'' +
+                '}';
+    }
+
 }

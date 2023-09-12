@@ -22,7 +22,7 @@ public class KeyBoardService {
         return markupInline;
     }
 
-    public static InlineKeyboardMarkup preparekeyboardInfoShelter(String text) {
+    public static InlineKeyboardMarkup preparekeyboardShelter(String text) {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
 
         InlineKeyboardButton button1 = new InlineKeyboardButton("О приюте " + text);
@@ -32,12 +32,12 @@ public class KeyBoardService {
         InlineKeyboardButton button5 = new InlineKeyboardButton("Связаться");
         InlineKeyboardButton button6 = new InlineKeyboardButton("Позвать волонетра");
 
-        button1.callbackData("INFO");
-        button2.callbackData("CONTSHELTER");
-        button3.callbackData("CONTSECURITY");
-        button4.callbackData("RULES");
-        button5.callbackData("CONNECT");
-        button6.callbackData("VOLUNTEER");
+        button1.callbackData("INFO" + text);
+        button2.callbackData("CONTSHELTER" + text);
+        button3.callbackData("CONTSECURITY" + text);
+        button4.callbackData("RULES" + text);
+        button5.callbackData("CONNECT" + text);
+        button6.callbackData("VOLUNTEER" + text);
 
 
         markupInline.addRow(button1, button2);
@@ -45,5 +45,8 @@ public class KeyBoardService {
         markupInline.addRow(button5, button6);
         return markupInline;
     }
+//    public static InlineKeyboardMarkup preparekeyboardInfoShelter(String text){
+//
+//    }
 
 }
