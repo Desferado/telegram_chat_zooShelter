@@ -54,6 +54,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     case ("INFO" + "собак"):
                         responseOnCommandInfoDogShelter(chatId);
                         break;
+                    case ("INFOSHELTER" + "кошек"):
+                        responseOnCommandInfoCat(chatId);
+                        break;
+                    case ("INFOSHELTER" + "собак"):
+                        responseOnCommandInfoDog(chatId);
+                        break;
                     case("CONTSHELTER" + "кошек"):
                         responseOnCommandContactCatShelter(chatId);
                         break;
@@ -65,61 +71,119 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
+
+    /***
+     * В ответ на команду "/start" метод отправляет в чат приветственное сообщение
+     * с клавиатурой выбора приюта или вызов волонтера.
+     * {@link #prepareKeyboardStart()}
+     * @param chatId
+     */
     private void responseOnCommandStart(long chatId) {
 
         SendMessage sendMess = new SendMessage(chatId, helloText);
         sendMess.replyMarkup(prepareKeyboardStart());
         SendResponse response = telegramBot.execute(sendMess);
     }
-
+    /***
+     * В ответ на выбор приюта кошек метод отправляет в чат приветственное сообщение
+     * от приюта с клавиатурой выбора меню для приюта кошек
+     * или вызов волонтера.
+     * {@link #prepareKeyboardCatShelter()}
+     * @param chatId
+     */
     private void responseOnCommandCatShelter(long chatId) {
 
         SendMessage sendMess = new SendMessage(chatId, greetingTextCat);
         sendMess.replyMarkup(prepareKeyboardCatShelter());
         SendResponse response = telegramBot.execute(sendMess);
     }
+    /***
+     * В ответ на выбор приюта собак метод отправляет в чат приветственное сообщение
+     * от имени приюта с клавиатурой выбора меню для приюта собак
+     * или вызов волонтера.
+     * {@link #prepareKeyboardDogShelter()}
+     * @param chatId
+     */
     private void responseOnCommandDogShelter(long chatId) {
 
         SendMessage sendMess = new SendMessage(chatId, greetingTextDog);
         sendMess.replyMarkup(prepareKeyboardDogShelter());
         SendResponse response = telegramBot.execute(sendMess);
     }
+    /***
+     * В ответ на выбор информации о приюте кошек метод отправляет в чат
+     * приветственное сообщение с информацией
+     * о приюте с клавиатурой выбора меню для приюта кошек или вызов волонтера.
+     * {@link #prepareKeyboardInfoCatShelter()}
+     * @param chatId
+     */
     private void responseOnCommandInfoCatShelter(long chatId) {
 
-        SendMessage sendMess = new SendMessage(chatId, aboutCatShelter);
+        SendMessage sendMess = new SendMessage(chatId, helloShelter);
         sendMess.replyMarkup(prepareKeyboardInfoCatShelter());
         SendResponse response = telegramBot.execute(sendMess);
     }
+
+    /***
+     * В ответ на выбор информации о приюте собак метод отправляет в чат
+     * приветственное сообщение с информацией
+     * о приюте с клавиатурой выбора меню для приюта собак или вызов волонтера.
+     * {@link #prepareKeyboardInfoDogShelter()}
+     * @param chatId
+     */
     private void responseOnCommandInfoDogShelter(long chatId) {
 
-        SendMessage sendMess = new SendMessage(chatId, aboutDogShelter);
+        SendMessage sendMess = new SendMessage(chatId, helloShelter);
         sendMess.replyMarkup(prepareKeyboardInfoDogShelter());
         SendResponse response = telegramBot.execute(sendMess);
     }
+    private void responseOnCommandInfoCat(long chatId) {
+
+        SendMessage sendMess = new SendMessage(chatId, aboutCatShelter);
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    private void responseOnCommandInfoDog(long chatId) {
+
+        SendMessage sendMess = new SendMessage(chatId, aboutDogShelter);
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    /***
+     * В ответ на выбор контактов приюта кошек метод отправляет в чат
+     * контакты приюта.
+     * @param chatId
+     */
     private void responseOnCommandContactCatShelter(long chatId){
 
         SendMessage sendMess = new SendMessage(chatId, contactCatShelter);
         SendResponse response = telegramBot.execute(sendMess);
     }
+    /***
+     * В ответ на выбор контактов приюта собак метод отправляет в чат
+     * контакты приюта.
+     * @param chatId
+     */
     private void responseOnCommandContactDogShelter(long chatId){
 
         SendMessage sendMess = new SendMessage(chatId, contactDogShelter);
         SendResponse response = telegramBot.execute(sendMess);
     }
 
-     /* метод создает инлайн клавиатуру после отправки команды Start
-    @return клавиатура подсообщением
-     */
+     /** метод создает инлайн клавиатуру после отправки команды "/start"
+     * @return клавиатура с подсообщением
+      */
 
     private InlineKeyboardMarkup prepareKeyboardStart() {
         return KeyBoardService.prepareKeyboardStart("кошек", "собак");
     }
-    /* метод создает инлайн клавиатуру после отправки команды для получения информации о приюте
-      @return клавиатура под сообщением
+     /** метод создает инлайн клавиатуру после выбора приюта кошек
+     * @return клавиатура с подсообщением
      */
     private InlineKeyboardMarkup prepareKeyboardCatShelter() {
         return KeyBoardService.prepareKeyboardShelter("кошек");
     }
+     /** метод создает инлайн клавиатуру после выбора приюта собак
+     * @return клавиатура с подсообщением
+     */
     private InlineKeyboardMarkup prepareKeyboardDogShelter() {
         return KeyBoardService.prepareKeyboardShelter("собак");
     }

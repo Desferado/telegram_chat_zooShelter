@@ -7,8 +7,8 @@ public class Constants {
             "\nСначала выбери приют.";
     public static String greetingTextCat = "Вас приветствует приют кошек. Ваш питомец уже ждет Вас.";
     public static String greetingTextDog = "Вас приветствует приют собак. Ваш верный друг уже ждет Вас.";
-    public static String aboutCatShelter = "Это самый лучший приют кошек, в которм Вы обязательно найдете себе пушистого питомца";
-    public static String aboutDogShelter = "Это самый лучший приют кошек, в которм Вы обязательно найдете себе самого верного друга";
+    public static String aboutCatShelter = "Это самый лучший приют для кошек, в котором Вы обязательно найдете себе пушистого питомца";
+    public static String aboutDogShelter = "Это самый лучший приют для собак, в котором Вы обязательно найдете себе самого верного друга";
     public static String contactCatShelter = "График работы, адрес и схема проезда в приют кошек.";
     public static String contactDogShelter = "График работы, адрес и схема проезда в приют собак.";
     public static String helloShelter = "Чего изволите?";
