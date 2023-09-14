@@ -23,7 +23,7 @@ public class Shelters {
     private long id;
     @Getter
     private String name;
-    private String adress;
+    private String address;
     private String location;
 
     @Override
@@ -37,7 +37,7 @@ public class Shelters {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, adress, location);
+        return Objects.hash(id, name, address, location);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Shelters {
         return "Shelters{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", adress='" + adress + '\'' +
+                ", address='" + address + '\'' +
                 ", location='" + location + '\'' +
                 '}';
     }
