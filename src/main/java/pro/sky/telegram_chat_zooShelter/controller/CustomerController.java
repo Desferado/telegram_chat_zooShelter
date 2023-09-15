@@ -51,7 +51,9 @@ public class CustomerController {
             )
     })
     @GetMapping("{id}")
-    public ResponseEntity <Customer> getCustomerById(@Parameter (description = "Клиент с данным id") @PathVariable Long id) {
+    public ResponseEntity <Customer> getCustomerById(
+            @Parameter (description = "Поиск клиента с данным id")
+            @RequestParam (required = false, name = "номер клиента") Long id) {
         Customer customer = customerService.findCustomerById(id);
         if (customer == null) {
             return ResponseEntity.notFound().build();
@@ -59,28 +61,32 @@ public class CustomerController {
             return ResponseEntity.ok(customer);
         }
     }
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Заведение клиента в базу",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation =  Customer.class)
+    @Operation(
+            summary = "Заведение клиента в базу",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Заведение клиента в базу",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Customer.class)
+                            )
                     )
-            )
-    })
+            })
     @PostMapping
     public ResponseEntity <Customer> createCustomer(@RequestBody Customer customer) {
         return ResponseEntity.ok(customerService.createCustomer(customer));
     }
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Изменение клиента",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation =  Customer.class)
+    @Operation(
+            summary = "Изменение клиента в базе",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Измененеие клиента в базе",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Customer.class)
+                            )
                     )
-            )
-    })
+            })
     @PutMapping
     public ResponseEntity <Customer> updateCustomer(@RequestBody Customer newCustomer) {
         Customer customer = customerService.updateCustomer(newCustomer);
@@ -90,15 +96,21 @@ public class CustomerController {
             return ResponseEntity.ok(customer);
         }
     }
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Удаление клиента из базы",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)
-            )
-    })
+    @Operation(
+            summary = "Удаление клиента из базы",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Удаление клиента из базы",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Customer.class)
+                            )
+                    )
+            })
     @DeleteMapping("{id}")
-    public ResponseEntity <Customer> removeCustomer(@PathVariable Long id) {
+    public ResponseEntity <Customer> removeCustomer(
+            @Parameter (description = "Удаление клиента с данным id")
+            @RequestParam (required = false, name = "номер клиента") Long id) {
         Customer customer = customerService.deleteCustomerById(id);
         if (customer == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
