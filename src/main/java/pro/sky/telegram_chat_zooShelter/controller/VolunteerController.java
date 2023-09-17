@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/volunteer")
-@Tag(name = "\uD83D\uDC68\u200D⚕️ Volunteer", description = "")
+@Tag(name = "\uD83D\uDC68\u200D⚕️ Volunteer ", description = "")
 public class VolunteerController {
     private final VolunteerService volunteerService;
 
@@ -29,14 +29,15 @@ public class VolunteerController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Found volunteers",
+                            description = "Found volunteerss",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = List.class)
                             )
                     ),
 
-            }
+            },
+            tags = "\uD83D\uDC68\u200D⚕️ Volunteer store"
     )
     @GetMapping
     public ResponseEntity<List<Volunteer>> findAllVolunteers(){
