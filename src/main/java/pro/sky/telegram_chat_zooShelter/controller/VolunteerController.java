@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/volunteer")
-@Tag(name = "\uD83D\uDC68\u200D⚕️ Volunteer ", description = "")
+@Tag(name = "\uD83D\uDC68\u200D⚕️ Volunteer", description = "")
 public class VolunteerController {
     private final VolunteerService volunteerService;
 
@@ -36,8 +36,7 @@ public class VolunteerController {
                             )
                     ),
 
-            },
-            tags = "\uD83D\uDC68\u200D⚕️ Volunteer store"
+            }
     )
     @GetMapping
     public ResponseEntity<List<Volunteer>> findAllVolunteers(){
