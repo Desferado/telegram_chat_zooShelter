@@ -29,7 +29,7 @@ public class VolunteerController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Found volunteerss",
+                            description = "Found volunteers",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = List.class)
