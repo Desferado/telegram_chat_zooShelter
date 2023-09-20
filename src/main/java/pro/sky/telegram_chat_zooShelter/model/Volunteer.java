@@ -7,11 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-
-import static java.util.Objects.isNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,20 +25,6 @@ public class Volunteer {
     private String secondName;
     private String phone;
     private String address;
-    
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "volunteer_shelter",
-            joinColumns = @JoinColumn(name = "volunteer_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "shelter_id", referencedColumnName = "id"))
-    private Set<Shelters> shelters = new HashSet<>();
-
-    
-    public void addShelter(Shelters shelter) {
-        if (isNull(shelters)) {
-            shelters = new HashSet<>();
-        }
-        shelters.add(shelter);
-    }
     
     @Override
     public boolean equals(Object o) {
