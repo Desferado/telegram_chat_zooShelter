@@ -1,15 +1,19 @@
 package pro.sky.telegram_chat_zooShelter.controller;
 
+import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -32,6 +36,8 @@ public class CustomerControllerTest {
 
     @MockBean
     private CustomerService customerService;
+    private final Gson gson = new Gson();
+
     private List<Customer> customers;
 
     @BeforeEach
@@ -60,16 +66,19 @@ public class CustomerControllerTest {
 
     @Test
     public void getCustomerByIdTest() throws Exception {
-        Customer customer = customers.get(0);
-        Long customerId = customer.getId();
+        Customer customer = new Customer(1L,10L, "Ivanov","Ivan","Ivanovich",
+                "212121","Adress1","email1");
+        Long customerID = customer.getId();
 
-        when(customerService.findCustomerById(customerId)).thenReturn(customer);
+        when(customerService.findCustomerById(customerID)).thenReturn(customer);
 
-        mockMvc.perform(get("/customer/{id}", customerId))
+        MockHttpServletResponse response = mockMvc.perform(get("/customer/{id}", customerID))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(customerId));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
 
-        verify(customerService).findCustomerById(customerId);
+        Customer actual = gson.fromJson(response.getContentAsString(), Customer.class);
+        assertThat(actual).isEqualTo(customer);
     }
 
     // Тест для создания клиента
@@ -93,13 +102,13 @@ public class CustomerControllerTest {
     @Test
     public void updateCustomerTest() throws Exception {
         Customer updatedCustomer = customers.get(0);
-        updatedCustomer.setName("Updated John Doe");
+        updatedCustomer.setName("Джон");
 
         when(customerService.updateCustomer(any(Customer.class))).thenReturn(updatedCustomer);
 
         mockMvc.perform(put("/customer")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1,\"имя клиента\":\"Updated John Doe\"}\""))
+                        .content("{\"id\":1,\"имя клиента\":\"Джон\"}\""))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(updatedCustomer.getId()));
 
