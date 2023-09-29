@@ -1,3 +1,5 @@
 databaseChangeLog:
+  - includeAll:
+        path: classpath*:liquibase/scripts/
   - include:
       file: liquibase/scripts/DBShelter.sql

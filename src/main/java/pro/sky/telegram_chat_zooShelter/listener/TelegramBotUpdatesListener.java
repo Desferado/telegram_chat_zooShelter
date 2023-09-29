@@ -72,6 +72,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     case("CONTSECURITY" + "собак"):
                         responseOnCommandContactSecurityDogShelter(chatId);
                         break;
+                    case("GETVOLUNTEER" + "кошек"):
+                        responseOnCommandContactVolunteerCatShelter(chatId);
+                        break;
+                    case("GETVOLUNTEER" + "собак"):
+                        responseOnCommandContactVolunteerDogShelter(chatId);
+                        break;
                 }
             }
         });
@@ -183,6 +189,18 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendMessage sendMess = new SendMessage(chatId, contactDogShelter);
         SendResponse response = telegramBot.execute(sendMess);
     }
+
+    private void responseOnCommandContactVolunteerCatShelter(long chatId){
+        SendMessage sendMess = new SendMessage(chatId, "Информация передана волонтеру.\n" +
+                "Ожидайте. Волонтер с вами свяжется для уточнения информации");
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    private void responseOnCommandContactVolunteerDogShelter(long chatId){
+        SendMessage sendMess = new SendMessage(chatId, "Информация передана волонтеру.\n" +
+                "Ожидайте. Волонтер с вами свяжется для уточнения информации");
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+
 
      /** метод создает инлайн клавиатуру после отправки команды "/start"
      * @return клавиатура с подсообщением
