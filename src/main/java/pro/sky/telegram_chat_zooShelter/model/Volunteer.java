@@ -26,11 +26,9 @@ public class Volunteer {
     private String phone;
     private String sex;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "volunteer_shelter",
-            joinColumns = @JoinColumn(name = "volunteer_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "shelter_id", referencedColumnName = "id"))
-    private Set<Shelters> shelters = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "id_shelter")
+    private Shelters shelters;
 
 
     @Override

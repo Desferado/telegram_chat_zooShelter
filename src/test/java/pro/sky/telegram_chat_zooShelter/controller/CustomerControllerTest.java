@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 import pro.sky.telegram_chat_zooShelter.model.Customer;
+
 import pro.sky.telegram_chat_zooShelter.services.CustomerService;
 
 import java.util.ArrayList;
@@ -45,9 +46,9 @@ public class CustomerControllerTest {
         customers = new ArrayList<>(
                 Arrays.asList(
                         new Customer(1L,10L, "Ivanov","Ivan","Ivanovich",
-                                "212121","Adress1","email1"),
+                                "212121","Adress1","email1",null),
                         new Customer(2L,20L, "Petrov","Petr","Petrovich",
-                                "3232323","Adress2","email2")
+                                "3232323","Adress2","email2",null)
                 )
         );
     }
@@ -67,7 +68,7 @@ public class CustomerControllerTest {
     @Test
     public void getCustomerByIdTest() throws Exception {
         Customer customer = new Customer(1L,10L, "Ivanov","Ivan","Ivanovich",
-                "212121","Adress1","email1");
+                "212121","Adress1","email1",null);
         Long customerID = customer.getId();
 
         when(customerService.findCustomerById(customerID)).thenReturn(customer);
@@ -85,13 +86,13 @@ public class CustomerControllerTest {
     @Test
     public void createCustomerTest() throws Exception {
         Customer newCustomer = new Customer(3L,30L, "Dibrov","Karl","Sidorovich",
-                "3235353","Adress3","email3");
+                "3235353","Adress3","email3", null);
 
         when(customerService.createCustomer(any(Customer.class))).thenReturn(newCustomer);
 
         mockMvc.perform(post("/customer")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":3,\"имя клиента\":\"Karl\"}\"")) // Если объект Customer имеет поле "имя клиента".
+                        .content("{\"id\":3,\"имя клиента\":\"Karl\"}")) // Если объект Customer имеет поле "имя клиента".
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(newCustomer.getId()));
 
@@ -108,7 +109,7 @@ public class CustomerControllerTest {
 
         mockMvc.perform(put("/customer")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1,\"имя клиента\":\"Джон\"}\""))
+                        .content("{\"id\":1,\"имя клиента\":\"Джон\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(updatedCustomer.getId()));
 

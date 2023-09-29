@@ -6,6 +6,7 @@ import lombok.*;
 
 
 
+
 // Таблица: Пользователь (Customer) в БД
 
 @Entity
@@ -27,7 +28,8 @@ public class Customer {
     private String email; //почта
 
 
-    @OneToMany(mappedBy = "pets")
+    @OneToOne(mappedBy = "pets")
+    private Pets pets;
 
 
     @Override
