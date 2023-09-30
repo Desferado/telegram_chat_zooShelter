@@ -46,9 +46,9 @@ public class CustomerControllerTest {
         customers = new ArrayList<>(
                 Arrays.asList(
                         new Customer(1L,10L, "Ivanov","Ivan","Ivanovich",
-                                "212121","Adress1","email1",null),
+                                "212121","Adress1","email1"),
                         new Customer(2L,20L, "Petrov","Petr","Petrovich",
-                                "3232323","Adress2","email2",null)
+                                "3232323","Adress2","email2")
                 )
         );
     }
@@ -68,7 +68,7 @@ public class CustomerControllerTest {
     @Test
     public void getCustomerByIdTest() throws Exception {
         Customer customer = new Customer(1L,10L, "Ivanov","Ivan","Ivanovich",
-                "212121","Adress1","email1",null);
+                "212121","Adress1","email1");
         Long customerID = customer.getId();
 
         when(customerService.findCustomerById(customerID)).thenReturn(customer);
@@ -86,7 +86,7 @@ public class CustomerControllerTest {
     @Test
     public void createCustomerTest() throws Exception {
         Customer newCustomer = new Customer(3L,30L, "Dibrov","Karl","Sidorovich",
-                "3235353","Adress3","email3", null);
+                "3235353","Adress3","email3");
 
         when(customerService.createCustomer(any(Customer.class))).thenReturn(newCustomer);
 
