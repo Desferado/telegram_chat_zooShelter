@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 import lombok.*;
 
-
-
+import java.util.Set;
 
 // Таблица: Пользователь (Customer) в БД
 
@@ -28,8 +27,10 @@ public class Customer {
     private String email; //почта
 
 
-    @OneToOne(mappedBy = "pets")
-    private Pets pets;
+    @OneToMany(mappedBy = "pets")
+
+
+
 
 
     @Override

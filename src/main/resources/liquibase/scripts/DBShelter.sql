@@ -40,3 +40,9 @@ create table if not exists volunteer    -- Таблица: волонтеров
     second_name varchar(30),
     surname     varchar(30)
     );
+--changeset denis:2
+ALTER TABLE shelters ALTER COLUMN location type VARCHAR(255);
+--changeset denis:3
+ALTER TABLE volunteer ADD COLUMN if not exists id_shelter BIGINT references shelters;
+--changeset denis:4
+update DATABASECHANGELOG set md5sum = null where true;
