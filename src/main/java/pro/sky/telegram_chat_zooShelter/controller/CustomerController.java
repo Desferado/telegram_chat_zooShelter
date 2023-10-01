@@ -23,6 +23,7 @@ import java.util.List;
 public class CustomerController {
     private final CustomerService customerService;
 
+
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
@@ -55,7 +56,7 @@ public class CustomerController {
     @GetMapping("{id}")
     public ResponseEntity <Customer> getCustomerById(
             @Parameter (description = "Поиск клиента с данным id")
-            @RequestParam (required = false, name = "номер клиента") Long id) {
+            @RequestParam (required = true, name = "номер клиента") Long id) {
         Customer customer = customerService.findCustomerById(id);
         if (customer == null) {
             return ResponseEntity.notFound().build();

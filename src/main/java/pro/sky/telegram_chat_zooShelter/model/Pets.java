@@ -29,6 +29,7 @@ public class Pets {
     @JoinColumn(name = "id_shelter")
     private Shelters shelters;
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

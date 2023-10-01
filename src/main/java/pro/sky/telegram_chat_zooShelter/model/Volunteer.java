@@ -1,19 +1,19 @@
 package pro.sky.telegram_chat_zooShelter.model;
-
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.Hibernate;
 
+import jakarta.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity
+
 @Table(name = "volunteer")
 public class Volunteer {
     @Id
@@ -24,8 +24,18 @@ public class Volunteer {
     private String name;
     private String secondName;
     private String phone;
-    private String address;
-    
+    private String sex;
+
+    @ManyToOne
+    @JoinColumn(name = "id_shelter")
+    private Shelters shelters;
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, chatId, surname, name, secondName, phone, sex, shelters);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -33,12 +43,7 @@ public class Volunteer {
         Volunteer volunteer = (Volunteer) o;
         return id != null && Objects.equals(id, volunteer.id);
     }
-    
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-    
+
     @Override
     public String toString() {
         return "Volunteer{" +

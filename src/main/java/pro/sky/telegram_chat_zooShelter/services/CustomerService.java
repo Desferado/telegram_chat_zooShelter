@@ -19,7 +19,7 @@ public class CustomerService {
     }
 
     public Customer findCustomerById(Long id) {
-        return customerRepository.findById(id).orElse(null);
+        return customerRepository.findCustomerById(id).orElse(null);
     }
 
     public Customer createCustomer(Customer customer) {
@@ -39,7 +39,7 @@ public class CustomerService {
         if (customer == null) {
             return null;
         } else {
-            customerRepository.deleteById(id);
+            customerRepository.deleteCustomerById(id);
             return customer;
         }
     }

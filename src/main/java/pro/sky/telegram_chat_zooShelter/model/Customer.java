@@ -3,8 +3,8 @@ package pro.sky.telegram_chat_zooShelter.model;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 import lombok.*;
-import java.util.Objects;
 
+import java.util.Set;
 
 // Таблица: Пользователь (Customer) в БД
 
@@ -25,7 +25,12 @@ public class Customer {
     private String phone; // тлф формата +70000000000
     private String address; // адрес
     private String email; //почта
+
+
     @OneToMany(mappedBy = "pets")
+
+
+
 
 
     @Override

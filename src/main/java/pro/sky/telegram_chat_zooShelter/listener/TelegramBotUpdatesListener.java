@@ -24,6 +24,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Autowired
     private TelegramBot telegramBot;
+    String nameCustomer;
 
     @PostConstruct
     public void init() {
@@ -34,11 +35,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     public int process(List<Update> updates) {
         updates.forEach(update -> {
             logger.info("Processing update: {}", update);
-            if (update.message() != null) {
+            if (update.message() != null)  {
                 if (update.message().text().equals("/start")) {
                     Long chatId = update.message().chat().id();
+                    nameCustomer = update.message().from().firstName();
                     responseOnCommandStart(chatId);
                 }
+
             } else if (update.callbackQuery() != null) {
                 Long chatId = update.callbackQuery().message().chat().id();
                 switch (update.callbackQuery().data()) {
@@ -72,6 +75,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     case("CONTSECURITY" + "собак"):
                         responseOnCommandContactSecurityDogShelter(chatId);
                         break;
+                    case("GETVOLUNTEER" + "кошек"):
+                        responseOnCommandContactVolunteerCatShelter(chatId);
+                        break;
+                    case("GETVOLUNTEER" + "собак"):
+                        responseOnCommandContactVolunteerDogShelter(chatId);
+                        break;
                 }
             }
         });
@@ -86,7 +95,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     private void responseOnCommandStart(long chatId) {
 
-        SendMessage sendMess = new SendMessage(chatId, helloText);
+        SendMessage sendMess = new SendMessage(chatId, "Привет, " + nameCustomer + "!\n"
+        + "Приют животных Астаны приветствует тебя\n" + "Выбери отдел приюта\n");
         sendMess.replyMarkup(prepareKeyboardStart());
         SendResponse response = telegramBot.execute(sendMess);
     }
@@ -183,6 +193,18 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendMessage sendMess = new SendMessage(chatId, contactDogShelter);
         SendResponse response = telegramBot.execute(sendMess);
     }
+
+    private void responseOnCommandContactVolunteerCatShelter(long chatId){
+        SendMessage sendMess = new SendMessage(chatId, "Информация передана волонтеру.\n" +
+                "Ожидайте. Волонтер с вами свяжется для уточнения информации");
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    private void responseOnCommandContactVolunteerDogShelter(long chatId){
+        SendMessage sendMess = new SendMessage(chatId, "Информация передана волонтеру.\n" +
+                "Ожидайте. Волонтер с вами свяжется для уточнения информации");
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+
 
      /** метод создает инлайн клавиатуру после отправки команды "/start"
      * @return клавиатура с подсообщением

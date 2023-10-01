@@ -10,5 +10,7 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findCustomerById(Long id);
 
+    void deleteCustomerById(Long id);
+
     Optional<Customer> findCustomerByChatId(Long chatId);
 }
