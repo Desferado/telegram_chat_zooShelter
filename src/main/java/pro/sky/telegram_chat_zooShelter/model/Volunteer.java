@@ -29,6 +29,8 @@ public class Volunteer {
     @ManyToOne
     @JoinColumn(name = "id_shelter")
     private Shelters shelters;
+    @OneToMany (mappedBy = "pets")
+    private Set<Pets> pets;
 
 
     @Override
