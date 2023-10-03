@@ -11,11 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pro.sky.telegram_chat_zooShelter.constants.Icon;
 import pro.sky.telegram_chat_zooShelter.services.KeyBoardService;
 
 import java.util.List;
 
-import static pro.sky.telegram_chat_zooShelter.Constants.*;
+import static pro.sky.telegram_chat_zooShelter.constants.Constants.*;
 
 @Service
 public class TelegramBotUpdatesListener implements UpdatesListener {
@@ -95,7 +96,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     private void responseOnCommandStart(long chatId) {
 
-        SendMessage sendMess = new SendMessage(chatId, "Привет, " + nameCustomer + "!\n"
+        SendMessage sendMess = new SendMessage(chatId, "Привет, " + nameCustomer + "!"+Icon.WAVE_Icon.get()+"\n"
         + "Приют животных Астаны приветствует тебя\n" + "Выбери отдел приюта\n");
         sendMess.replyMarkup(prepareKeyboardStart());
         SendResponse response = telegramBot.execute(sendMess);
@@ -211,7 +212,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
       */
 
     private InlineKeyboardMarkup prepareKeyboardStart() {
-        return KeyBoardService.prepareKeyboardStart("кошек", "собак");
+        return KeyBoardService.prepareKeyboardStart("кошек" + Icon.CAT_Icon.get(), "собак"+Icon.DOG_Icon.get());
     }
      /** метод создает инлайн клавиатуру после выбора приюта кошек
      * @return клавиатура с подсообщением
