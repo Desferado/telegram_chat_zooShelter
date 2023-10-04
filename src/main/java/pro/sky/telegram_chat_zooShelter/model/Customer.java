@@ -28,7 +28,8 @@ public class Customer {
 
 
     @OneToMany(mappedBy = "pets")
-    private Set<Pets> pets;
+
+
 
 
 

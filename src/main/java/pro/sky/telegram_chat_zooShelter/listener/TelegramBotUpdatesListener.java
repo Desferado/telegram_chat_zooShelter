@@ -3,6 +3,7 @@ package pro.sky.telegram_chat_zooShelter.listener;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pro.sky.telegram_chat_zooShelter.model.Customer;
 import pro.sky.telegram_chat_zooShelter.services.KeyBoardService;
 
 import java.util.List;
@@ -24,6 +26,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Autowired
     private TelegramBot telegramBot;
+    private User  telegramCustomer;
 
     @PostConstruct
     public void init() {
@@ -35,10 +38,22 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         updates.forEach(update -> {
             logger.info("Processing update: {}", update);
             if (update.message() != null) {
+                telegramCustomer = update.message().from();
                 if (update.message().text().equals("/start")) {
                     Long chatId = update.message().chat().id();
                     responseOnCommandStart(chatId);
+                    Customer customer = new Customer(
+                            telegramCustomer.id(),
+                            chatId,
+                            telegramCustomer.lastName(),
+                            telegramCustomer.firstName(),
+                            telegramCustomer.username(),
+                            null,
+                            null,
+                            null
+                            );
                 }
+
             } else if (update.callbackQuery() != null) {
                 Long chatId = update.callbackQuery().message().chat().id();
                 switch (update.callbackQuery().data()) {
@@ -92,7 +107,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     private void responseOnCommandStart(long chatId) {
 
-        SendMessage sendMess = new SendMessage(chatId, helloText);
+        SendMessage sendMess = new SendMessage(chatId, "Привет, " + telegramCustomer.firstName() + "!\n"
+        + "Приют животных Астаны приветствует тебя\n" + "Выбери отдел приюта\n");
         sendMess.replyMarkup(prepareKeyboardStart());
         SendResponse response = telegramBot.execute(sendMess);
     }

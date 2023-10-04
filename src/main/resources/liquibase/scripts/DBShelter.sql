@@ -46,3 +46,5 @@ ALTER TABLE shelters ALTER COLUMN location type VARCHAR(255);
 ALTER TABLE volunteer ADD COLUMN if not exists id_shelter BIGINT references shelters;
 --changeset denis:4
 update DATABASECHANGELOG set md5sum = null where true;
+--changeset denis:5
+INSERT INTO volunteer (id, sex, chat_id, name, phone, second_name, surname,  id_shelter) VALUES (1, 'муж', 1284536796, 'Иван', 89304148202, 'Иванов',  'Иванович', 1);

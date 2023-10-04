@@ -30,7 +30,7 @@ public class Volunteer {
     @JoinColumn(name = "id_shelter")
     private Shelters shelters;
     @OneToMany (mappedBy = "pets")
-    private Set<Pets> pets;
+
 
 
     @Override
