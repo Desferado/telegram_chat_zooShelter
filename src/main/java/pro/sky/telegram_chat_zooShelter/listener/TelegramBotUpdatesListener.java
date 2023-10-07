@@ -27,6 +27,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Autowired
     private TelegramBot telegramBot;
     private User  telegramCustomer;
+    String nameCustomer;
 
     @PostConstruct
     public void init() {
@@ -41,6 +42,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 telegramCustomer = update.message().from();
                 if (update.message().text().equals("/start")) {
                     Long chatId = update.message().chat().id();
+                    nameCustomer = update.message().from().firstName();
                     responseOnCommandStart(chatId);
                     Customer customer = new Customer(
                             telegramCustomer.id(),
@@ -53,7 +55,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             null
                             );
                 }
-
             } else if (update.callbackQuery() != null) {
                 Long chatId = update.callbackQuery().message().chat().id();
                 switch (update.callbackQuery().data()) {
