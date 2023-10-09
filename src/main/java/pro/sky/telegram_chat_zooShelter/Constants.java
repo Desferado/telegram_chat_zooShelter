@@ -18,4 +18,6 @@ public class Constants {
                                                      "\nсвяжетесь со службой охраны по телефону: " +
                                                      "\n8(908)2345678";;
     public static String helloShelter = "Чего изволите?";
+    public static String  callVolunter = "Информация передана волонтеру.\n" +
+            "Ожидайте. Волонтер с вами свяжется для уточнения информации";
 }
