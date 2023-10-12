@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import jakarta.annotation.PostConstruct;
@@ -13,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
+import pro.sky.telegram_chat_zooShelter.services.CustomerService;
 import pro.sky.telegram_chat_zooShelter.services.KeyBoardService;
 
 import java.util.List;
@@ -27,6 +27,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Autowired
     private TelegramBot telegramBot;
     private User  telegramCustomer;
+    private CustomerService customer;
+
+
+    public TelegramBotUpdatesListener(TelegramBot telegramBot, CustomerService customer) {
+        this.telegramBot = telegramBot;
+        this.customer = customer;
+    }
     String nameCustomer;
 
     @PostConstruct
@@ -44,16 +51,18 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     Long chatId = update.message().chat().id();
                     nameCustomer = update.message().from().firstName();
                     responseOnCommandStart(chatId);
-                    Customer customer = new Customer(
-                            telegramCustomer.id(),
-                            chatId,
-                            telegramCustomer.lastName(),
-                            telegramCustomer.firstName(),
-                            telegramCustomer.username(),
-                            null,
-                            null,
-                            null
-                            );
+                    if(customer.findCustomerByChatId(chatId)== null) {
+                        customer.createCustomer(new Customer(
+                                telegramCustomer.id(),
+                                chatId,
+                                telegramCustomer.lastName(),
+                                telegramCustomer.firstName(),
+                                telegramCustomer.username(),
+                                null,
+                                null,
+                                null
+                        ));
+                    }
                 }
             } else if (update.callbackQuery() != null) {
                 Long chatId = update.callbackQuery().message().chat().id();

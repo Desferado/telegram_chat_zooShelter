@@ -90,7 +90,7 @@ create table if not exists photoPet    -- Таблица: фотоотчета
 );
 
 --changeset denis:7
--- ALTER TABLE report ALTER COLUMN date TIMESTAMP;
+ALTER TABLE customer ADD CONSTRAINT chat_id_unique UNIQUE (chat_id);
 
 --changeset denis:8
 update DATABASECHANGELOG set md5sum = null where true;
