@@ -29,10 +29,6 @@ public class Customer {
 
     @OneToMany(mappedBy = "pets")
 
-
-
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

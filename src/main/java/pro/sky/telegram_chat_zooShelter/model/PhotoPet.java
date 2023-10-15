@@ -21,8 +21,8 @@ public class PhotoPet {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "pets_id")
-    private Pets pet;
+    @JoinColumn(name = "id_pets")
+    private Pets pets;
 
     public void setId(Long id) {
         this.id = id;
@@ -54,7 +54,7 @@ public class PhotoPet {
         result = 31 * result + (filePath != null ? filePath.hashCode() : 0);
         result = 31 * result + (int) (fileSize ^ (fileSize >>> 32));
         result = 31 * result + (mediaType != null ? mediaType.hashCode() : 0);
-        result = 31 * result + (pet != null ? pet.hashCode() : 0);
+        result = 31 * result + (pets != null ? pets.hashCode() : 0);
         return result;
     }
 }

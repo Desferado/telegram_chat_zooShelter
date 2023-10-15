@@ -46,7 +46,7 @@ public class PhotoPetService {
 
         PhotoPet photoPet = findPhotoPet(petId);
         photoPetRepository.save(photoPet);
-        photoPet.setPet(pets);
+        photoPet.setPets(pets);
         photoPet.setFilePath(filePath.toString());
         photoPet.setFileSize(file.getSize());
         photoPet.setMediaType(file.getContentType());
@@ -59,7 +59,7 @@ public class PhotoPetService {
     }
 
     public PhotoPet findPhotoPet(Long petId) {
-        return photoPetRepository.findPhotoPetByPetId(petId).orElse(new PhotoPet());
+        return photoPetRepository.findPhotoPetById(petId).orElse(new PhotoPet());
     }
 
     public PhotoPet savePhotoReport(PhotoPet photoPet) {

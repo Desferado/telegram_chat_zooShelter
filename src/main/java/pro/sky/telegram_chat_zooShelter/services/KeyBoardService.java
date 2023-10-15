@@ -62,8 +62,4 @@ public class KeyBoardService {
         markupInline.addRow(button3, button4);
         return markupInline;
     }
-//    public static InlineKeyboardMarkup preparekeyboardInfoShelter(String text){
-//
-//    }
-
 }

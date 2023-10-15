@@ -21,7 +21,9 @@ public class CustomerService {
     public Customer findCustomerById(Long id) {
         return customerRepository.findCustomerById(id).orElse(null);
     }
-
+    public Customer findCustomerByChatId(Long chatId) {
+        return customerRepository.findCustomerByChatId(chatId).orElse(null);
+    }
     public Customer createCustomer(Customer customer) {
         return customerRepository.save(customer);
     }
@@ -43,4 +45,5 @@ public class CustomerService {
             return customer;
         }
     }
+
 }
