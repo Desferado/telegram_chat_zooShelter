@@ -36,7 +36,7 @@ public class KeyBoardService {
         button3.callbackData("CONTSECURITY" + text);
         button4.callbackData("RULES" + text);
         button5.callbackData("CONNECT" + text);
-        button6.callbackData("VOLUNTEER" + text);
+        button6.callbackData("CALL_VOLUNTEER" + text);
 
 
         markupInline.addRow(button1, button2);
@@ -55,7 +55,7 @@ public class KeyBoardService {
         button1.callbackData("INFO" + text);
         button2.callbackData("GETPET");
         button3.callbackData("SENDREPORT");
-        button4.callbackData("VOLUNTEER");
+        button4.callbackData("CALL_VOLUNTEER" + text);
 
 
         markupInline.addRow(button1, button2);

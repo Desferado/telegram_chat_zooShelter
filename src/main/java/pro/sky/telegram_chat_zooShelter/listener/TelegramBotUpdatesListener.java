@@ -97,12 +97,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     case("CONTSECURITY" + "собак"):
                         responseOnCommandContactSecurityDogShelter(chatId);
                         break;
-                    case("GETVOLUNTEER" + "кошек"):
-                        responseOnCommandContactVolunteerCatShelter(chatId);
+                    case("CALL_VOLUNTEER" + "кошек"):
+                        responseOnCommandContactVolunteerCatShelter(chatId,telegramCustomer);
                         break;
-                    case("GETVOLUNTEER" + "собак"):
-                        responseOnCommandContactVolunteerDogShelter(chatId);
+                    case("CALL_VOLUNTEER" + "собак"):
+                        responseOnCommandContactVolunteerDogShelter(chatId,telegramCustomer);
                         break;
+
                 }
             }
         });
@@ -198,11 +199,15 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         responseOnCommand(chatId, contactDogShelter);
     }
 
-    private void responseOnCommandContactVolunteerCatShelter(long chatId){
+    private void responseOnCommandContactVolunteerCatShelter(long chatId, User telegramCustomer){
         responseOnCommand(chatId, callVolunter);
+        responseOnCommand(1284536796, "Клиент" + nameCustomer + " нуждается\n" +
+                " в консультации. @" + telegramCustomer.username());
     }
-    private void responseOnCommandContactVolunteerDogShelter(long chatId){
+    private void responseOnCommandContactVolunteerDogShelter(long chatId, User telegramCustomer){
         responseOnCommand(chatId, callVolunter);
+        responseOnCommand(1284536796, "Клиент " + nameCustomer + " нуждается\n" +
+                " в консультации. @" + telegramCustomer.username());
     }
 
     private SendMessage startBot(long chatId, String userName){
