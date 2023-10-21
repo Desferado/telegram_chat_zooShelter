@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -28,6 +29,7 @@ public class Pets {
     @ManyToOne
     @JoinColumn(name = "id_shelter")
     private Shelters shelters;
+    private LocalDateTime decisionDate; // дата принятия решения по усыновлению
 
 
     @Override

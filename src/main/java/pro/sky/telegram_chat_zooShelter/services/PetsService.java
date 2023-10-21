@@ -1,6 +1,7 @@
 package pro.sky.telegram_chat_zooShelter.services;
 
 import org.springframework.stereotype.Service;
+import pro.sky.telegram_chat_zooShelter.model.Customer;
 import pro.sky.telegram_chat_zooShelter.model.Pets;
 import pro.sky.telegram_chat_zooShelter.repository.PetsRepository;
 
@@ -41,6 +42,22 @@ public class PetsService {
             petsRepository.deleteById(id);
             return pet;
         }
+    }
+    /**
+     * @param customer record Customer
+     * @return list of "Pet" where customer field is <b>{@code customer}</b>
+     * @see PetsRepository#findPetsByCustomer(Customer)
+     */
+    public List<Pets> findPetsByCustomer(Customer customer) {
+        return petsRepository.findPetsByCustomer(customer);
+    }
+    /**
+     * Список питомцев, для которых назначен усыновитель
+     *
+     * @return список питомцев
+     */
+    public List<Pets> findPetsWithCustomer() {
+        return petsRepository.findPetsByCustomerNotNull();
     }
 }
 
