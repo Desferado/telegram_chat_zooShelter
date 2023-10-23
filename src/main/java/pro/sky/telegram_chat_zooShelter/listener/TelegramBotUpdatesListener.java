@@ -3,6 +3,7 @@ package pro.sky.telegram_chat_zooShelter.listener;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pro.sky.telegram_chat_zooShelter.constants.Icon;
+import pro.sky.telegram_chat_zooShelter.model.Customer;
+import pro.sky.telegram_chat_zooShelter.services.CustomerService;
 import pro.sky.telegram_chat_zooShelter.services.KeyBoardService;
 
 import java.util.List;
@@ -25,7 +28,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Autowired
     private TelegramBot telegramBot;
-    private User  telegramCustomer;
+    private User telegramCustomer;
     private CustomerService customer;
 
 
@@ -213,7 +216,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         responseOnCommand(chatId, callVolunteer);
         responseOnCommand(1284536796, "Клиент" + nameCustomer + " нуждается\n" +
                 " в консультации. @" + telegramCustomer.username());
-    private void responseOnCommandContactVolunteerCatShelter(long chatId){
         SendMessage sendMess = new SendMessage(chatId, "Информация передана волонтеру.\n" +
                 "Ожидайте. Волонтер с вами свяжется для уточнения информации");
         SendResponse response = telegramBot.execute(sendMess);

@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface PhotoPetRepository extends JpaRepository<PhotoPet, Long> {
 
-    Optional<PhotoPet> findPhotoPetById(Long petId);
-    List<PhotoPet> findAllByReport (Report report);
+    Optional<PhotoPet> findPhotoPetById(Long reportId);
+    List<PhotoPet> findAllByReport_Id (Long reportId);
 }
