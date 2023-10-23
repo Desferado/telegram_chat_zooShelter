@@ -18,7 +18,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 @Transactional
 public class PhotoPetService {
 
-    @Value("photo_pet")
+    @Value("${path.to.avatars.folder}")
     private String coversDir;
 
     private final PetsService petsService;

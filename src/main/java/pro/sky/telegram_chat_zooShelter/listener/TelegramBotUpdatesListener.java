@@ -102,6 +102,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     case("CALL_VOLUNTEER" + "собак"):
                         responseOnCommandContactVolunteerDogShelter(chatId,telegramCustomer);
                         break;
+                    case("SENDREPORT"):
+                        responseOnCommandReportShelter(chatId);
                 }
             }
         });
@@ -168,6 +170,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         sendMess.replyMarkup(KeyBoardService.prepareKeyboardInfoShelter("собак"));
         SendResponse response = telegramBot.execute(sendMess);
     }
+    /***
+     * В ответ на выбор отправки отчета, метод отправляет в чат
+     * приветственное сообщение с информацией
+     * о правильном зполнении отчета и с клавиатурой выбора меню для приюта кошек или вызов волонтера.
+     * @param chatId
+     */
+    private void responseOnCommandReportShelter(long chatId) {
+        responseOnCommand(chatId, reportShelter);
+    }
+
     private void responseOnCommandInfoCat(long chatId) {
         responseOnCommand(chatId, aboutCatShelter);
     }
@@ -198,7 +210,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
 
     private void responseOnCommandContactVolunteerCatShelter(long chatId, User telegramCustomer){
-        responseOnCommand(chatId, callVolunter);
+        responseOnCommand(chatId, callVolunteer);
         responseOnCommand(1284536796, "Клиент" + nameCustomer + " нуждается\n" +
                 " в консультации. @" + telegramCustomer.username());
     private void responseOnCommandContactVolunteerCatShelter(long chatId){
@@ -207,7 +219,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendResponse response = telegramBot.execute(sendMess);
     }
     private void responseOnCommandContactVolunteerDogShelter(long chatId, User telegramCustomer){
-        responseOnCommand(chatId, callVolunter);
+        responseOnCommand(chatId, callVolunteer);
         responseOnCommand(1284536796, "Клиент " + nameCustomer + " нуждается\n" +
                 " в консультации. @" + telegramCustomer.username());
     }

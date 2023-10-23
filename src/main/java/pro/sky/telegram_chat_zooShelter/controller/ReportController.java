@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pro.sky.telegram_chat_zooShelter.model.PhotoPet;
 import pro.sky.telegram_chat_zooShelter.model.Report;
 import pro.sky.telegram_chat_zooShelter.services.ReportService;
 
@@ -91,7 +92,7 @@ public class ReportController {
 
     @Operation(
             tags = "\uD83D\uDCCB Report store",
-            summary = "Обновил отчет по его идентификатору в базе данных.",
+            summary = "Обновить отчет по его идентификатору в базе данных.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -130,5 +131,24 @@ public ResponseEntity<Report> createReport(@RequestBody Report report) {
         Report created = reportService.createReport(report);
         return ResponseEntity.ok(created);
         }
+    @Operation(
+            tags = "\uD83D\uDCCB Report store",
+            summary = "Search for all photos by report id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Found reports",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = List.class)
+                            )
+                    ),
+
+            }
+    )
+    @GetMapping("{id}/photos")
+    public ResponseEntity<List<PhotoPet>> getPhotosByReportId(@PathVariable Long id) {
+        return ResponseEntity.ok(reportService.getAllPhotoByReportId(id));
+    }
 
 }

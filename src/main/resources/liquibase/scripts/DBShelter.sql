@@ -105,3 +105,7 @@ create table if not exists report
     constraint fk1kk5qc2sk2cc71fibvnto90ax
     references pets
     );
+--changeset denis:9
+ALTER TABLE photo_pet ADD COLUMN if not exists id_report BIGINT references report;
+--changeset denis:10
+ALTER TABLE customer ADD COLUMN if not exists id_pets BIGINT references pets;
