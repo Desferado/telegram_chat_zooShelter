@@ -49,7 +49,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             logger.info("Processing update: {}", update);
             if (update.message() != null) {
                 telegramCustomer = update.message().from();
-                if (update.message().text().equals("/start")) {
+                if (update.message().text() != null && update.message().text().equals("/start")) {
                     Long chatId = update.message().chat().id();
                     nameCustomer = update.message().from().firstName();
                     responseOnCommandStart(chatId);
@@ -216,9 +216,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         responseOnCommand(chatId, callVolunteer);
         responseOnCommand(1284536796, "Клиент" + nameCustomer + " нуждается\n" +
                 " в консультации. @" + telegramCustomer.username());
-        SendMessage sendMess = new SendMessage(chatId, "Информация передана волонтеру.\n" +
-                "Ожидайте. Волонтер с вами свяжется для уточнения информации");
-        SendResponse response = telegramBot.execute(sendMess);
     }
     private void responseOnCommandContactVolunteerDogShelter(long chatId, User telegramCustomer){
         responseOnCommand(chatId, callVolunteer);
