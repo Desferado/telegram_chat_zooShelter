@@ -32,7 +32,9 @@ public class Constants {
     public static String rulesShelter = "общие рекомендации о технике безопасности на территории приюта";
     public static String listDocuments = "список документов, необходимых для того, чтобы взять животное из приюта.";
     public static String rejection = "список причин, почему могут отказать и не дать забрать собаку из приюта";
-    public static String getContact = "Оставьте свои контакты для связи. Мы обязательно с Вами свяжемся.";
+    public static String getContact = "Оставьте свои контакты для связи.\n"
+    + "Мы обязательно с Вами свяжемся.\n"
+            + "Сообщение начните со слов 'контакт для связи:'";
     public static String recommendations = "Вы можете ознакомиться с основными рекомендациями о том,\n"
     + " как предстоит подготовиться ко встрече с новым членом семьи.";
     public static String transportRecom = "список рекомендаций по транспортировке животного.";

@@ -2,6 +2,8 @@ package pro.sky.telegram_chat_zooShelter.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.File;
+import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -11,16 +13,19 @@ import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.telegram_chat_zooShelter.constants.Icon;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
 import pro.sky.telegram_chat_zooShelter.services.CustomerService;
 import pro.sky.telegram_chat_zooShelter.services.KeyBoardService;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 
 import java.util.List;
 
 import static pro.sky.telegram_chat_zooShelter.constants.Constants.*;
-
 @Service
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
@@ -30,18 +35,24 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private TelegramBot telegramBot;
     private User telegramCustomer;
     private final CustomerService customer;
+    boolean startWait = false;
+
+    private String nameCustomer;
+    private String tlText;
+    @Value("${telegram.bot.token}")
+    private String token;
 
 
     public TelegramBotUpdatesListener(TelegramBot telegramBot, CustomerService customer) {
         this.telegramBot = telegramBot;
         this.customer = customer;
     }
-    String nameCustomer;
 
     @PostConstruct
     public void init() {
         telegramBot.setUpdatesListener(this);
     }
+
 
     @Override
     public int process(List<Update> updates) {
@@ -49,7 +60,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             logger.info("Processing update: {}", update);
             if (update.message() != null) {
                 telegramCustomer = update.message().from();
-                if (update.message().text() != null && update.message().text().equals("/start")) {
+                tlText = update.message().text();
+                if (tlText != null && tlText.equals("/start")) {
                     Long chatId = update.message().chat().id();
                     nameCustomer = update.message().from().firstName();
                     responseOnCommandStart(chatId);
@@ -65,6 +77,21 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 null
                         ));
                     }
+                } else if (update.message().photo() != null ) {
+                    responseOnCommand (1284536796, "Клиент прислал фото");
+                    SendPhoto sendPhoto = new SendPhoto();
+                    sendPhoto.setChatId(1284536796L);
+                    String fileId = sendPhoto.getFileField();
+                    sendPhoto.setPhoto(new InputFile(fileId));
+//                    SendResponse response = telegramBot.execute(sendPhoto);
+                } else if (tlText.toLowerCase().contains("отчет")) {
+                    responseOnCommand (1284536796, "Клиент " + nameCustomer
+                            + " id" + telegramCustomer.id()
+                            + " прислал отчет: " + tlText);
+                } else if (tlText.toLowerCase().contains("контакт")){
+                    responseOnCommand (1284536796, "Клиент " + nameCustomer
+                            + " прислал свои контактные данные для связи: " + tlText);
+
                 }
             } else if (update.callbackQuery() != null) {
                 Long chatId = update.callbackQuery().message().chat().id();
@@ -186,7 +213,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
-    /***
+     /***
      * В ответ на команду "/start" метод отправляет в чат приветственное сообщение
      * с клавиатурой выбора приюта или вызов волонтера.
      */
@@ -197,6 +224,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         sendMess.replyMarkup(prepareKeyboardStart());
         SendResponse response = telegramBot.execute(sendMess);
     }
+
     /***
      * В ответ на выбор приюта кошек метод отправляет в чат приветственное сообщение
      * от приюта с клавиатурой выбора меню для приюта кошек
@@ -213,12 +241,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      * от имени приюта с клавиатурой выбора меню для приюта собак
      * или вызов волонтера.
      */
-    private void responseOnCommandDogShelter(long chatId) {
+    public void responseOnCommandDogShelter(long chatId) {
 
         SendMessage sendMess = new SendMessage(chatId, greetingTextDog);
         sendMess.replyMarkup(KeyBoardService.prepareKeyboardShelter("собак"));
         SendResponse response = telegramBot.execute(sendMess);
     }
+
     /***
      * В ответ на выбор информации о приюте кошек метод отправляет в чат
      * приветственное сообщение с информацией
@@ -367,18 +396,19 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         responseOnCommand(chatId, bestCynologist);
     }
 
-//    private SendMessage startBot(long chatId, String userName){
-//        SendMessage message = new SendMessage(chatId,"Привет, " + userName
-//                + "Приют животных Астаны приветствует тебя\n"
-//                + "Выбери отдел приюта\n");
-//        return message;
-//    }
+    private void responseOnCommandSendTextReport(String text){
+        responseOnCommand(1284536796, "Привет");
+        if (text.toLowerCase().contains("отчет")) {
+            responseOnCommand(1284536796, text);
+        } else {
+            responseOnCommand(1284536796, "Пустое сообщение");
+        }
+    }
 
     private void responseOnCommand (long chatId, String text){
         SendMessage sendMess = new SendMessage(chatId, text);
         SendResponse response = telegramBot.execute(sendMess);
     }
-
 
      /** метод создает инлайн клавиатуру после отправки команды "/start"
      * @return клавиатура с подсообщением
@@ -387,20 +417,4 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private InlineKeyboardMarkup prepareKeyboardStart() {
         return KeyBoardService.prepareKeyboardStart("кошек" + Icon.CAT_Icon.get(), "собак"+Icon.DOG_Icon.get());
     }
-
-//    private InlineKeyboardMarkup prepareKeyboardCatShelter() {
-//        return KeyBoardService.prepareKeyboardShelter("кошек");
-//    }
-//     /** метод создает инлайн клавиатуру после выбора приюта собак
-//     * @return клавиатура с подсообщением
-//     */
-//    private InlineKeyboardMarkup prepareKeyboardDogShelter() {
-//        return KeyBoardService.prepareKeyboardShelter("собак");
-//    }
-//    private InlineKeyboardMarkup prepareKeyboardInfoCatShelter() {
-//        return KeyBoardService.prepareKeyboardInfoShelter("кошек");
-//    }
-//    private InlineKeyboardMarkup prepareKeyboardInfoDogShelter() {
-//        return KeyBoardService.prepareKeyboardInfoShelter("собак");
-//    }
-}
+    }
