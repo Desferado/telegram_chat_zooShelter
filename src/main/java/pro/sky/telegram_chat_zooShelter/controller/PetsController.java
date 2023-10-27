@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegram_chat_zooShelter.model.Pets;
+import pro.sky.telegram_chat_zooShelter.repository.PetsRepository;
 import pro.sky.telegram_chat_zooShelter.services.NotificationService;
 import pro.sky.telegram_chat_zooShelter.services.PetsService;
 
@@ -24,7 +25,7 @@ import java.util.List;
 public class PetsController {
     private final PetsService petsService;
 
-    public PetsController(PetsService petsService, NotificationService notificationService) {
+    public PetsController(PetsService petsService, NotificationService notificationService, PetsRepository petsRepository) {
         this.petsService = petsService;
     }
     @Operation(
@@ -64,6 +65,7 @@ public class PetsController {
             return ResponseEntity.ok(pet);
         }
     }
+
     @Operation(
             summary = "Заведение животного в базу",
             responses = {
@@ -76,7 +78,7 @@ public class PetsController {
                     )
             })
     @PostMapping
-    public ResponseEntity <Pets> createPet(@RequestBody Pets pet) {
+    public ResponseEntity <Pets> createPet(@RequestBody (required = false) Pets pet){
         return ResponseEntity.ok(petsService.createPet(pet));
     }
     @Operation(
@@ -99,6 +101,7 @@ public class PetsController {
             return ResponseEntity.ok(pet);
         }
     }
+
     @Operation(
             summary = "Удаление животного из базы",
             responses = {
@@ -120,46 +123,5 @@ public class PetsController {
         }
         return ResponseEntity.ok(pet);
     }
-    @Operation(
-            summary = "Установка испытательного срока для владельца животного",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Установка испытательного срока для владельца животного",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Pets.class)
-                            )
-                    )
-            })
-    @PutMapping("{id}")
-    public ResponseEntity <Pets> setPetProbation(
-            @Parameter(description = "Установка испытательного срока для владельца животного по его id")
-            @RequestParam (required = false, name = "номер животного") Long id) {
-        Pets pet = petsService.setPetProbation(id);
-        if (pet.getDecisionDate() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(pet);
-    }
-    @Operation(
-            summary = "Удаление испытательного срока для владельца животного",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Удаление испытательного срока для владельца животного",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Pets.class)
-                            )
-                    )
-            })
-    @DeleteMapping("{id}")
-    public ResponseEntity <Pets> deletePetProbation(
-            @Parameter(description = "Удаление испытательного срока для владельца животного по его id")
-            @RequestParam (required = false, name = "номер животного") Long id) {
-        Pets pet = petsService.deletePetProbation(id);
-        if (pet.getDecisionDate() != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(pet);
-    }
+
 }

@@ -111,3 +111,5 @@ ALTER TABLE photo_pet ADD COLUMN if not exists id_report BIGINT references repor
 ALTER TABLE customer ADD COLUMN if not exists id_pets BIGINT references pets;
 --changeset denis:11
 ALTER TABLE pets ALTER COLUMN decision_date TYPE Date;
+--changeset denis:12
+ALTER TABLE pets ADD COLUMN if not exists probation_status varchar(30);

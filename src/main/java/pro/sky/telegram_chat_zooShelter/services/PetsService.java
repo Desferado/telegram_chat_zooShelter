@@ -5,6 +5,7 @@ import pro.sky.telegram_chat_zooShelter.model.Customer;
 import pro.sky.telegram_chat_zooShelter.model.Pets;
 import pro.sky.telegram_chat_zooShelter.repository.PetsRepository;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -64,12 +65,19 @@ public class PetsService {
     public Pets setPetProbation(Long id) {
         Pets pet = findPetById(id);
         pet.setDecisionDate(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        pet.setProbationStatus("в процессе");
+        updatePet(pet);
         return pet;
     }
     public Pets deletePetProbation(Long id) {
         Pets pet = findPetById(id);
         pet.setDecisionDate(null);
+        pet.setProbationStatus(null);
+        updatePet(pet);
         return pet;
+    }
+    public LocalDate getDateProbation(Long id){
+        return findPetById(id).getDecisionDate();
     }
 
 }
