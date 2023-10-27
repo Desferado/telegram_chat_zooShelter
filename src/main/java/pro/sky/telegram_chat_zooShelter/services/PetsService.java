@@ -5,6 +5,8 @@ import pro.sky.telegram_chat_zooShelter.model.Customer;
 import pro.sky.telegram_chat_zooShelter.model.Pets;
 import pro.sky.telegram_chat_zooShelter.repository.PetsRepository;
 
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 @Service
 public class PetsService {
@@ -59,5 +61,16 @@ public class PetsService {
     public List<Pets> findPetsWithCustomer() {
         return petsRepository.findPetsByCustomerNotNull();
     }
+    public Pets setPetProbation(Long id) {
+        Pets pet = findPetById(id);
+        pet.setDecisionDate(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        return pet;
+    }
+    public Pets deletePetProbation(Long id) {
+        Pets pet = findPetById(id);
+        pet.setDecisionDate(null);
+        return pet;
+    }
+
 }
 

@@ -15,6 +15,4 @@ public interface PetsRepository extends JpaRepository<Pets, Long> {
     List<Pets> findPetsByCustomer(Customer customer);
     List<Pets> findPetsByCustomerNotNull();
 
-
-
 }
