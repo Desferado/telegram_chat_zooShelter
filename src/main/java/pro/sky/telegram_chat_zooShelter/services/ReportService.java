@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
 import pro.sky.telegram_chat_zooShelter.model.Pets;
+import pro.sky.telegram_chat_zooShelter.model.PhotoPet;
 import pro.sky.telegram_chat_zooShelter.model.Report;
 import pro.sky.telegram_chat_zooShelter.repository.PetsRepository;
+import pro.sky.telegram_chat_zooShelter.repository.PhotoPetRepository;
 import pro.sky.telegram_chat_zooShelter.repository.ReportRepository;
 
 import java.time.LocalDate;
@@ -24,10 +26,12 @@ public class ReportService {
     private final static Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
     private final ReportRepository reportRepository;
+    private final PetsService petService;
     private final PetsRepository petsRepository;
+    private PhotoPetRepository photoPet;
 
     public ReportService(ReportRepository reportRepository, PetsService petService, PetsRepository petsRepository) {
-
+        this.petService = petService;
         this.reportRepository = reportRepository;
         this.petsRepository = petsRepository;
     }
@@ -151,16 +155,19 @@ public class ReportService {
      * Формирую список пользователей, которые не сдали сегодня отчет
      *
      * @return список пользователей без отчета сегодня
-     *//*
+     */
     public List<Customer> findCustomersWithoutTodayReport() {
         List<Customer> customerWithoutReportList = new ArrayList<>();
-        for (Pets pets : petsRepository.findPetsWithCustomer()) {
+        for (Pets pets : petsRepository.findPetsByCustomerNotNull()) {
             Report report = findTodayCompletedReportsByPetId(pets.getId());
             if (null == report) {
                 customerWithoutReportList.add(pets.getCustomer());
             }
         }
         return customerWithoutReportList;
-    }*/
+    }
+    public  List<PhotoPet> getAllPhotoByReportId(Long id){
+        return photoPet.findAllByReport_Id(id);
+    }
 }
 

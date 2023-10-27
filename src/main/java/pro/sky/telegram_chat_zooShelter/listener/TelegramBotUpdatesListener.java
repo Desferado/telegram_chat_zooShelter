@@ -2,23 +2,30 @@ package pro.sky.telegram_chat_zooShelter.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.File;
+import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import pro.sky.telegram_chat_zooShelter.constants.Icon;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
 import pro.sky.telegram_chat_zooShelter.services.CustomerService;
 import pro.sky.telegram_chat_zooShelter.services.KeyBoardService;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 
 import java.util.List;
 
 import static pro.sky.telegram_chat_zooShelter.constants.Constants.*;
-
 @Service
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
@@ -26,20 +33,26 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Autowired
     private TelegramBot telegramBot;
-    private User  telegramCustomer;
-    private CustomerService customer;
+    private User telegramCustomer;
+    private final CustomerService customer;
+    boolean startWait = false;
+
+    private String nameCustomer;
+    private String tlText;
+    @Value("${telegram.bot.token}")
+    private String token;
 
 
     public TelegramBotUpdatesListener(TelegramBot telegramBot, CustomerService customer) {
         this.telegramBot = telegramBot;
         this.customer = customer;
     }
-    String nameCustomer;
 
     @PostConstruct
     public void init() {
         telegramBot.setUpdatesListener(this);
     }
+
 
     @Override
     public int process(List<Update> updates) {
@@ -47,7 +60,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             logger.info("Processing update: {}", update);
             if (update.message() != null) {
                 telegramCustomer = update.message().from();
-                if (update.message().text().equals("/start")) {
+                tlText = update.message().text();
+                if (tlText != null && tlText.equals("/start")) {
                     Long chatId = update.message().chat().id();
                     nameCustomer = update.message().from().firstName();
                     responseOnCommandStart(chatId);
@@ -63,6 +77,21 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 null
                         ));
                     }
+                } else if (update.message().photo() != null ) {
+                    responseOnCommand (1284536796, "Клиент прислал фото");
+                    SendPhoto sendPhoto = new SendPhoto();
+                    sendPhoto.setChatId(1284536796L);
+                    String fileId = sendPhoto.getFileField();
+                    sendPhoto.setPhoto(new InputFile(fileId));
+//                    SendResponse response = telegramBot.execute(sendPhoto);
+                } else if (tlText.toLowerCase().contains("отчет")) {
+                    responseOnCommand (1284536796, "Клиент " + nameCustomer
+                            + " id" + telegramCustomer.id()
+                            + " прислал отчет: " + tlText);
+                } else if (tlText.toLowerCase().contains("контакт")){
+                    responseOnCommand (1284536796, "Клиент " + nameCustomer
+                            + " прислал свои контактные данные для связи: " + tlText);
+
                 }
             } else if (update.callbackQuery() != null) {
                 Long chatId = update.callbackQuery().message().chat().id();
@@ -103,30 +132,103 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     case("CALL_VOLUNTEER" + "собак"):
                         responseOnCommandContactVolunteerDogShelter(chatId,telegramCustomer);
                         break;
-
+                    case("SENDREPORT"):
+                        responseOnCommandReportShelter(chatId);
+                        break;
+                    case("GETPET" + "кошек"):
+                        responseOnCommandGetCat(chatId);
+                        break;
+                    case("GETPET" + "собак"):
+                        responseOnCommandGetDog(chatId);
+                        break;
+                    case("RULES" + "кошек"):
+                        responseOnCommandRulesCatShelter(chatId);
+                        break;
+                    case("RULES" + "собак"):
+                        responseOnCommandRulesDogShelter(chatId);
+                        break;
+                    case("RULESGETTING" + "кошек"):
+                        responseOnCommandRulesCat(chatId);
+                        break;
+                    case("RULESGETTING" + "собак"):
+                        responseOnCommandRulesDog(chatId);
+                        break;
+                    case("LISTDOCUMENTS" + "кошек"):
+                        responseOnCommandCatDocuments(chatId);
+                        break;
+                    case("LISTDOCUMENTS" + "собак"):
+                        responseOnCommandDogDocuments(chatId);
+                        break;
+                    case("RECOMMENDATIONS" + "кошек"):
+                        responseOnCommandCatRecommendation(chatId);
+                        break;
+                    case("RECOMMENDATIONS" + "собак"):
+                        responseOnCommandDogRecommendation(chatId);
+                        break;
+                    case("REJECTION" + "кошек"):
+                        responseOnCommandCatRejection(chatId);
+                        break;
+                    case("REJECTION" + "собак"):
+                        responseOnCommandDogRejection(chatId);
+                        break;
+                    case("CONNECT" + "кошек"):
+                        responseOnCommandGetContact(chatId);
+                        break;
+                    case("CONNECT" + "собак"):
+                        responseOnCommandGetContact(chatId);
+                        break;
+                    case("TRANSPORT" + "кошек"):
+                        responseOnCommandCatTransport(chatId);
+                        break;
+                    case("TRANSPORT" + "собак"):
+                        responseOnCommandDogTransport(chatId);
+                        break;
+                    case("YANG" + "кошек"):
+                        responseOnCommandCatYang(chatId);
+                        break;
+                    case("YANG" + "собак"):
+                        responseOnCommandDogYang(chatId);
+                        break;
+                    case("OLD" + "кошек"):
+                        responseOnCommandCatOld(chatId);
+                        break;
+                    case("OLD" + "собак"):
+                        responseOnCommandDogOld(chatId);
+                        break;
+                    case("DISABILITIES" + "кошек"):
+                        responseOnCommandCatDisabilities(chatId);
+                        break;
+                    case("DISABILITIES" + "собак"):
+                        responseOnCommandDogDisabilities(chatId);
+                        break;
+                    case("CYNOLOGIST"):
+                        responseOnCommandCynologist(chatId);
+                        break;
+                    case("BESTCYNOLOGIST"):
+                        responseOnCommandBestCynologist(chatId);
+                        break;
                 }
             }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
-    /***
+     /***
      * В ответ на команду "/start" метод отправляет в чат приветственное сообщение
      * с клавиатурой выбора приюта или вызов волонтера.
-     * @param chatId
      */
     private void responseOnCommandStart(long chatId) {
-        SendMessage sendMess = new SendMessage(chatId,"Привет, " + nameCustomer
-                + "Приют животных Астаны приветствует тебя\n"
-                + "Выбери отдел приюта\n");
-        sendMess.replyMarkup(KeyBoardService.prepareKeyboardStart("кошек", "собак"));
+
+        SendMessage sendMess = new SendMessage(chatId, "Привет, " + nameCustomer + "!"+ Icon.WAVE_Icon.get()+"\n"
+        + "Приют животных Астаны приветствует тебя\n" + "Выбери отдел приюта\n");
+        sendMess.replyMarkup(prepareKeyboardStart());
         SendResponse response = telegramBot.execute(sendMess);
     }
+
     /***
      * В ответ на выбор приюта кошек метод отправляет в чат приветственное сообщение
      * от приюта с клавиатурой выбора меню для приюта кошек
      * или вызов волонтера.
-     * @param chatId
      */
     private void responseOnCommandCatShelter(long chatId) {
 
@@ -138,19 +240,18 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      * В ответ на выбор приюта собак метод отправляет в чат приветственное сообщение
      * от имени приюта с клавиатурой выбора меню для приюта собак
      * или вызов волонтера.
-     * @param chatId
      */
-    private void responseOnCommandDogShelter(long chatId) {
+    public void responseOnCommandDogShelter(long chatId) {
 
         SendMessage sendMess = new SendMessage(chatId, greetingTextDog);
         sendMess.replyMarkup(KeyBoardService.prepareKeyboardShelter("собак"));
         SendResponse response = telegramBot.execute(sendMess);
     }
+
     /***
      * В ответ на выбор информации о приюте кошек метод отправляет в чат
      * приветственное сообщение с информацией
      * о приюте с клавиатурой выбора меню для приюта кошек или вызов волонтера.
-     * @param chatId
      */
     private void responseOnCommandInfoCatShelter(long chatId) {
 
@@ -163,61 +264,165 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      * В ответ на выбор информации о приюте собак метод отправляет в чат
      * приветственное сообщение с информацией
      * о приюте с клавиатурой выбора меню для приюта собак или вызов волонтера.
-     * @param chatId
      */
     private void responseOnCommandInfoDogShelter(long chatId) {
         SendMessage sendMess = new SendMessage(chatId, helloShelter);
         sendMess.replyMarkup(KeyBoardService.prepareKeyboardInfoShelter("собак"));
         SendResponse response = telegramBot.execute(sendMess);
     }
+    /***
+     * В ответ на выбор отправки отчета, метод отправляет в чат
+     * приветственное сообщение с информацией
+     * о правильном зполнении отчета и с клавиатурой выбора меню для приюта кошек или вызов волонтера.
+     */
+    private void responseOnCommandReportShelter(long chatId) {
+        responseOnCommand(chatId, reportShelter);
+    }
     private void responseOnCommandInfoCat(long chatId) {
-        responseOnCommand(chatId, aboutCatShelter);
+
+        SendMessage sendMess = new SendMessage(chatId, aboutCatShelter);
+        SendResponse response = telegramBot.execute(sendMess);
     }
     private void responseOnCommandInfoDog(long chatId) {
-        responseOnCommand(chatId, aboutDogShelter);
+
+        SendMessage sendMess = new SendMessage(chatId, aboutDogShelter);
+        SendResponse response = telegramBot.execute(sendMess);
     }
     private void responseOnCommandContactSecurityCatShelter(long chatId) {
-        responseOnCommand(chatId, contactSecurityCatShelter);
+
+        SendMessage sendMess = new SendMessage(chatId, contactSecurityCatShelter);
+        SendResponse response = telegramBot.execute(sendMess);
     }
     private void responseOnCommandContactSecurityDogShelter(long chatId) {
-        responseOnCommand(chatId, contactSecurityDogShelter);
+
+        SendMessage sendMess = new SendMessage(chatId, contactSecurityDogShelter);
+        SendResponse response = telegramBot.execute(sendMess);
     }
     /***
      * В ответ на выбор контактов приюта кошек метод отправляет в чат
      * контакты приюта.
-     * @param chatId
      */
     private void responseOnCommandContactCatShelter(long chatId){
         responseOnCommand(chatId, contactCatShelter);
     }
+
     /***
      * В ответ на выбор контактов приюта собак метод отправляет в чат
      * контакты приюта.
-     * @param chatId
      */
     private void responseOnCommandContactDogShelter(long chatId){
         responseOnCommand(chatId, contactDogShelter);
     }
 
     private void responseOnCommandContactVolunteerCatShelter(long chatId, User telegramCustomer){
-        responseOnCommand(chatId, callVolunter);
+        responseOnCommand(chatId, callVolunteer);
         responseOnCommand(1284536796, "Клиент" + nameCustomer + " нуждается\n" +
                 " в консультации. @" + telegramCustomer.username());
     }
     private void responseOnCommandContactVolunteerDogShelter(long chatId, User telegramCustomer){
-        responseOnCommand(chatId, callVolunter);
+        responseOnCommand(chatId, callVolunteer);
         responseOnCommand(1284536796, "Клиент " + nameCustomer + " нуждается\n" +
                 " в консультации. @" + telegramCustomer.username());
     }
-
-    private SendMessage startBot(long chatId, String userName){
-        SendMessage message = new SendMessage(chatId,"Привет, " + userName
-                + "Приют животных Астаны приветствует тебя\n"
-                + "Выбери отдел приюта\n");
-        return message;
+    private void responseOnCommandGetContact(long chatId){
+        responseOnCommand(chatId, getContact);
     }
+    private void responseOnCommandCatRecommendation(Long chatId){
+        SendMessage sendMess = new SendMessage(chatId, recommendations);
+        sendMess.replyMarkup(KeyBoardService.prepareKeyboardCatRecommendation("кошек"));
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    private void responseOnCommandDogRecommendation(Long chatId){
+        SendMessage sendMess = new SendMessage(chatId, recommendations);
+        sendMess.replyMarkup(KeyBoardService.prepareKeyboardDogRecommendation("собак"));
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+
+    private void responseOnCommandGetCat(Long chatId){
+        SendMessage sendMess = new SendMessage(chatId,greeting);
+        sendMess.replyMarkup(KeyBoardService.prepareKeyboardGetPet("кошек"));
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    private void responseOnCommandGetDog(Long chatId){
+        SendMessage sendMess = new SendMessage(chatId,greeting);
+        sendMess.replyMarkup(KeyBoardService.prepareKeyboardGetPet("собак"));
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+
+    private void responseOnCommandRulesCatShelter(long chatId){
+        responseOnCommand(chatId, rulesShelter);
+    }
+    private void responseOnCommandRulesDogShelter(long chatId){
+        responseOnCommand(chatId, rulesShelter);
+    }
+    private void responseOnCommandRulesCat(long chatId){
+        responseOnCommand(chatId, rules);
+    }
+    private void responseOnCommandRulesDog(long chatId){
+        responseOnCommand(chatId, rules);
+    }
+    private void responseOnCommandCatDocuments(long chatId){
+        responseOnCommand(chatId, listDocuments);
+    }
+    private void responseOnCommandDogDocuments(long chatId){
+        responseOnCommand(chatId, listDocuments);
+    }
+    private void responseOnCommandCatRejection(long chatId){
+        responseOnCommand(chatId, rejection);
+    }
+    private void responseOnCommandDogRejection(long chatId){
+        responseOnCommand(chatId, rejection);
+    }
+    private void responseOnCommandCatTransport(long chatId){
+        responseOnCommand(chatId, transportRecom);
+    }
+    private void responseOnCommandDogTransport(long chatId){
+        responseOnCommand(chatId, transportRecom);
+    }
+    private void responseOnCommandCatYang(long chatId){
+        responseOnCommand(chatId, yangRecom);
+    }
+    private void responseOnCommandDogYang(long chatId){
+        responseOnCommand(chatId, yangRecom);
+    }
+    private void responseOnCommandCatOld(long chatId){
+        responseOnCommand(chatId, oldRecom);
+    }
+    private void responseOnCommandDogOld(long chatId){
+        responseOnCommand(chatId, oldRecom);
+    }
+    private void responseOnCommandCatDisabilities(long chatId){
+        responseOnCommand(chatId, disabilitiesRecom);
+    }
+    private void responseOnCommandDogDisabilities(long chatId){
+        responseOnCommand(chatId, disabilitiesRecom);
+    }
+    private void responseOnCommandCynologist(long chatId){
+        responseOnCommand(chatId, cynologistRecom);
+    }
+    private void responseOnCommandBestCynologist(long chatId){
+        responseOnCommand(chatId, bestCynologist);
+    }
+
+    private void responseOnCommandSendTextReport(String text){
+        responseOnCommand(1284536796, "Привет");
+        if (text.toLowerCase().contains("отчет")) {
+            responseOnCommand(1284536796, text);
+        } else {
+            responseOnCommand(1284536796, "Пустое сообщение");
+        }
+    }
+
     private void responseOnCommand (long chatId, String text){
         SendMessage sendMess = new SendMessage(chatId, text);
         SendResponse response = telegramBot.execute(sendMess);
     }
-}
+
+     /** метод создает инлайн клавиатуру после отправки команды "/start"
+     * @return клавиатура с подсообщением
+      */
+
+    private InlineKeyboardMarkup prepareKeyboardStart() {
+        return KeyBoardService.prepareKeyboardStart("кошек" + Icon.CAT_Icon.get(), "собак"+Icon.DOG_Icon.get());
+    }
+    }
