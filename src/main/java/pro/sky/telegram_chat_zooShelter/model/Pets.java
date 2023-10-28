@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -22,6 +23,9 @@ public class Pets {
     private String name;
     private String type_pets;
     private String breed;
+    private String probationStatus;  //статус испытателного срока
+    private LocalDate decisionDate ; // дата принятия решения по усыновлению
+    private Long limit_probation;    // испытательный срок
     @ManyToOne
     @JoinColumn(name = "id_customer")
     private Customer customer;
@@ -29,7 +33,6 @@ public class Pets {
     @ManyToOne
     @JoinColumn(name = "id_shelter")
     private Shelters shelters;
-    private LocalDateTime decisionDate; // дата принятия решения по усыновлению
 
 
     @Override
@@ -43,6 +46,6 @@ public class Pets {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, age, name, type_pets, breed, customer, shelters);
+        return Objects.hash(id, age, name, type_pets, probationStatus, decisionDate, breed, customer, shelters);
     }
 }

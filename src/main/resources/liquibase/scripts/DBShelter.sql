@@ -109,3 +109,10 @@ create table if not exists report
 ALTER TABLE photo_pet ADD COLUMN if not exists id_report BIGINT references report;
 --changeset denis:10
 ALTER TABLE customer ADD COLUMN if not exists id_pets BIGINT references pets;
+--changeset denis:11
+ALTER TABLE pets ALTER COLUMN decision_date TYPE Date;
+--changeset denis:12
+ALTER TABLE pets ADD COLUMN if not exists probation_status varchar(30);
+--changeset denis:13
+ALTER TABLE pets ADD COLUMN if not exists limit_probation INT;
+ALTER TABLE pets ALTER COLUMN limit_probation TYPE  BIGINT;

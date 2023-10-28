@@ -2,8 +2,6 @@ package pro.sky.telegram_chat_zooShelter.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
-import com.pengrad.telegrambot.model.File;
-import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -16,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.telegram_chat_zooShelter.constants.Icon;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
 import pro.sky.telegram_chat_zooShelter.services.CustomerService;
 import pro.sky.telegram_chat_zooShelter.services.KeyBoardService;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static pro.sky.telegram_chat_zooShelter.constants.Constants.*;
@@ -35,7 +33,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private TelegramBot telegramBot;
     private User telegramCustomer;
     private final CustomerService customer;
-    boolean startWait = false;
 
     private String nameCustomer;
     private String tlText;
@@ -85,7 +82,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     sendPhoto.setPhoto(new InputFile(fileId));
 //                    SendResponse response = telegramBot.execute(sendPhoto);
                 } else if (tlText.toLowerCase().contains("отчет")) {
-                    responseOnCommand (1284536796, "Клиент " + nameCustomer
+                    responseOnCommand (1284536796, LocalDate.now() + " - Клиент " + nameCustomer
                             + " id" + telegramCustomer.id()
                             + " прислал отчет: " + tlText);
                 } else if (tlText.toLowerCase().contains("контакт")){
