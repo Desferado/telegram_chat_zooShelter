@@ -65,6 +65,7 @@ public class ProbationController {
             @Parameter(description = "Установка испытательного срока для владельца животного по его id")
             @RequestParam(required = false, name = "номер животного") Long id) {
         Pets pet = petsService.setPetProbation(id);
+        petsService.setAddDays(30, id);
         if (pet.getDecisionDate() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -91,4 +92,6 @@ public class ProbationController {
         }
         return ResponseEntity.ok(pet);
     }
+
+
 }

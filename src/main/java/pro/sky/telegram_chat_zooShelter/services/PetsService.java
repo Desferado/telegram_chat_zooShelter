@@ -73,12 +73,27 @@ public class PetsService {
         Pets pet = findPetById(id);
         pet.setDecisionDate(null);
         pet.setProbationStatus(null);
+        pet.setLimit_probation(null);
         updatePet(pet);
         return pet;
     }
     public LocalDate getDateProbation(Long id){
         return findPetById(id).getDecisionDate();
-    }
 
+    }
+    public String getProbationStatus (Long id){
+        return findPetById(id).getProbationStatus();
+    }
+    public Long setAddDays(int addDays, Long id){
+        Pets pet = findPetById(id);
+        if (pet.getLimit_probation() == null){
+            pet.setLimit_probation(0L);
+        }
+        Long limit = pet.getLimit_probation();
+        limit = limit + addDays;
+        pet.setLimit_probation(limit);
+        updatePet(pet);
+        return limit;
+    }
 }
 

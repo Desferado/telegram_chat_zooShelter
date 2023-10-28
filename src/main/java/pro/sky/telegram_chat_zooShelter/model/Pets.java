@@ -25,6 +25,7 @@ public class Pets {
     private String breed;
     private String probationStatus;  //статус испытателного срока
     private LocalDate decisionDate ; // дата принятия решения по усыновлению
+    private Long limit_probation;    // испытательный срок
     @ManyToOne
     @JoinColumn(name = "id_customer")
     private Customer customer;
