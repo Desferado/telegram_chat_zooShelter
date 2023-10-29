@@ -13,11 +13,22 @@ class NotificationServiceTest {
      */
     @Test
     void testSendNotification() {
+        // Создаем экземпляр NotificationService (предполагая, что он имеет конструктор по умолчанию)
+        NotificationService notificationService = new NotificationService();
+
+        // Создаем mock объект java.sql.Date
         java.sql.Date date1 = mock(java.sql.Date.class);
+
+        // Настроим mock, чтобы он возвращал нужное значение, когда вызывается toInstant()
         when(date1.toInstant()).thenReturn(LocalDate.of(1970, 1, 1).atStartOfDay().atZone(ZoneOffset.UTC).toInstant());
-        NotificationService.sendNotification(1, date1,
+
+        // Вызываем метод sendNotification на экземпляре NotificationService
+        notificationService.sendNotification(1, date1,
                 java.util.Date.from(LocalDate.of(1970, 1, 1).atStartOfDay().atZone(ZoneOffset.UTC).toInstant()));
+
+        // Проверяем, что метод toInstant() был вызван на mock объекте date1
         verify(date1).toInstant();
     }
+
 }
 

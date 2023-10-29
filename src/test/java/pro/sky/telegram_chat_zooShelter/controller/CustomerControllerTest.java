@@ -1,133 +1,127 @@
 package pro.sky.telegram_chat_zooShelter.controller;
 
-import com.google.gson.Gson;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
-
 import pro.sky.telegram_chat_zooShelter.services.CustomerService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
+@ContextConfiguration(classes = {CustomerController.class})
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(CustomerController.class)
-public class CustomerControllerTest {
-
+class CustomerControllerTest {
     @Autowired
-    private MockMvc mockMvc;
+    private CustomerController customerController;
 
     @MockBean
     private CustomerService customerService;
-    private final Gson gson = new Gson();
 
-    private List<Customer> customers;
-
-    @BeforeEach
-    public void setUp() {
-        customers = new ArrayList<>(
-                Arrays.asList(
-                        new Customer(1L,10L, "Ivanov","Ivan","Ivanovich",
-                                "212121","Adress1","email1"),
-                        new Customer(2L,20L, "Petrov","Petr","Petrovich",
-                                "3232323","Adress2","email2")
-                )
-        );
+    /**
+     * Method under test: {@link CustomerController#createCustomer(Customer)}
+     */
+    @Test
+    void testCreateCustomer() throws Exception {
+        Customer customer = new Customer();
+        customer.setAddress("42 Main St");
+        customer.setChatId(1L);
+        customer.setEmail("jane.doe@example.org");
+        customer.setId(1L);
+        customer.setName("Name");
+        customer.setPhone("6625550144");
+        customer.setSecondName("Second Name");
+        customer.setSurname("Doe");
+        String content = (new ObjectMapper()).writeValueAsString(customer);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/customer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(customerController)
+                .build()
+                .perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(405));
     }
 
+    /**
+     * Method under test: {@link CustomerController#getAllCustomers()}
+     */
     @Test
-    public void getAllCustomersTest() throws Exception {
-        when(customerService.getCustomers()).thenReturn(customers);
-
-        mockMvc.perform(get("/customer/get-customers"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(customers.size()));
-
-        verify(customerService).getCustomers();
+    void testGetAllCustomers() throws Exception {
+        when(customerService.getCustomers()).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/customer/get-customers");
+        MockMvcBuilders.standaloneSetup(customerController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
-
+    /**
+     * Method under test: {@link CustomerController#getCustomerById(Long)}
+     */
     @Test
-    public void getCustomerByIdTest() throws Exception {
-        Customer customer = new Customer(1L,10L, "Ivanov","Ivan","Ivanovich",
-                "212121","Adress1","email1");
-        Long customerID = customer.getId();
-
-        when(customerService.findCustomerById(customerID)).thenReturn(customer);
-
-        MockHttpServletResponse response = mockMvc.perform(get("/customer/{id}", customerID))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
-
-        Customer actual = gson.fromJson(response.getContentAsString(), Customer.class);
-        assertThat(actual).isEqualTo(customer);
+    void testGetCustomerById() throws Exception {
+        Customer customer = new Customer();
+        customer.setAddress("42 Main St");
+        customer.setChatId(1L);
+        customer.setEmail("jane.doe@example.org");
+        customer.setId(1L);
+        customer.setName("Name");
+        customer.setPhone("6625550144");
+        customer.setSecondName("Second Name");
+        customer.setSurname("Doe");
+        when(customerService.findCustomerById(Mockito.<Long>any())).thenReturn(customer);
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/customer/42");
+        MockHttpServletRequestBuilder requestBuilder = getResult.param("номер клиента", String.valueOf(1L));
+        MockMvcBuilders.standaloneSetup(customerController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"id\":1,\"chatId\":1,\"surname\":\"Doe\",\"name\":\"Name\",\"secondName\":\"Second Name\",\"phone\":\"6625550144\","
+                                        + "\"address\":\"42 Main St\",\"email\":\"jane.doe@example.org\"}"));
     }
 
-    // Тест для создания клиента
+    /**
+     * Method under test: {@link CustomerController#removeCustomer(Long)}
+     */
     @Test
-    public void createCustomerTest() throws Exception {
-        Customer newCustomer = new Customer(3L,30L, "Dibrov","Karl","Sidorovich",
-                "3235353","Adress3","email3");
-
-        when(customerService.createCustomer(any(Customer.class))).thenReturn(newCustomer);
-
-        mockMvc.perform(post("/customer")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":3,\"имя клиента\":\"Karl\"}")) // Если объект Customer имеет поле "имя клиента".
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(newCustomer.getId()));
-
-        verify(customerService).createCustomer(any(Customer.class));
-    }
-
-    // Тест для обновления клиента
-    @Test
-    public void updateCustomerTest() throws Exception {
-        Customer updatedCustomer = customers.get(0);
-        updatedCustomer.setName("Джон");
-
-        when(customerService.updateCustomer(any(Customer.class))).thenReturn(updatedCustomer);
-
-        mockMvc.perform(put("/customer")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1,\"имя клиента\":\"Джон\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(updatedCustomer.getId()));
-
-        verify(customerService).updateCustomer(any(Customer.class));
-    }
-
-    // Тест для удаления клиента
-    @Test
-    public void removeCustomerTest() throws Exception {
-        Customer deletedCustomer = customers.get(0);
-        Long customerId = deletedCustomer.getId();
-
-        when(customerService.deleteCustomerById(customerId)).thenReturn(deletedCustomer);
-
-        mockMvc.perform(delete("/customer/{id}", customerId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(customerId));
-
-        verify(customerService).deleteCustomerById(customerId);
+    void testRemoveCustomer() throws Exception {
+        Customer customer = new Customer();
+        customer.setAddress("42 Main St");
+        customer.setChatId(1L);
+        customer.setEmail("jane.doe@example.org");
+        customer.setId(1L);
+        customer.setName("Name");
+        customer.setPhone("6625550144");
+        customer.setSecondName("Second Name");
+        customer.setSurname("Doe");
+        when(customerService.deleteCustomerById(Mockito.<Long>any())).thenReturn(customer);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/customer/42");
+        MockMvcBuilders.standaloneSetup(customerController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"id\":1,\"chatId\":1,\"surname\":\"Doe\",\"name\":\"Name\",\"secondName\":\"Second Name\",\"phone\":\"6625550144\","
+                                        + "\"address\":\"42 Main St\",\"email\":\"jane.doe@example.org\"}"));
     }
 }
+

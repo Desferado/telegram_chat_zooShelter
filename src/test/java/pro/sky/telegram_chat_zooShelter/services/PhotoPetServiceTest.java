@@ -45,13 +45,22 @@ class PhotoPetServiceTest {
      */
     @Test
     void testUploadPhotoPet() throws IOException {
+        // Создаем статический мок (MockedStatic) для класса Files
         try (MockedStatic<Files> mockFiles = mockStatic(Files.class)) {
+
+            // Устанавливаем моки для статических методов класса Files
+            // Первый мок для метода deleteIfExists - возвращаем true
             mockFiles.when(() -> Files.deleteIfExists(Mockito.<Path>any())).thenReturn(true);
+
+            // Второй мок для метода newOutputStream - возвращаем ByteArrayOutputStream
             mockFiles.when(() -> Files.newOutputStream(Mockito.<Path>any(), isA(OpenOption[].class)))
                     .thenReturn(new ByteArrayOutputStream(1));
+
+            // Третий мок для метода createDirectories - возвращаем путь во временной директории
             mockFiles.when(() -> Files.createDirectories(Mockito.<Path>any(), isA(FileAttribute[].class)))
                     .thenReturn(Paths.get(System.getProperty("java.io.tmpdir"), "test.txt"));
 
+            // Создаем объекты для тестирования
             Customer customer = new Customer();
             customer.setAddress("42 Main St");
             customer.setChatId(1L);
@@ -221,13 +230,21 @@ class PhotoPetServiceTest {
             photoPet2.setPets(pets4);
             photoPet2.setReport(report2);
             Optional<PhotoPet> ofResult = Optional.of(photoPet2);
+
+            // Моки для сервисов и репозиториев
             when(photoPetRepository.save(Mockito.<PhotoPet>any())).thenReturn(photoPet);
             when(photoPetRepository.findPhotoPetById(Mockito.<Long>any())).thenReturn(ofResult);
+
+            // Вызываем метод uploadPhotoPet, передавая MockMultipartFile
             photoPetService.uploadPhotoPet(1L,
                     new MockMultipartFile("Name", new ByteArrayInputStream("AXAXAXAX".getBytes("UTF-8"))));
+
+            // Проверяем, что статические методы Files были вызваны
             mockFiles.verify(() -> Files.createDirectories(Mockito.<Path>any(), isA(FileAttribute[].class)));
             mockFiles.verify(() -> Files.deleteIfExists(Mockito.<Path>any()));
             mockFiles.verify(() -> Files.newOutputStream(Mockito.<Path>any(), isA(OpenOption[].class)));
+
+            // Проверяем, что методы сервисов и репозиториев были вызваны
             verify(photoPetRepository, atLeast(1)).save(Mockito.<PhotoPet>any());
             verify(photoPetRepository).findPhotoPetById(Mockito.<Long>any());
             verify(petsService).findPetById(Mockito.<Long>any());
@@ -320,6 +337,8 @@ class PhotoPetServiceTest {
      */
     @Test
     void testSavePhotoReport() {
+
+        // Создаем объекты для тестирования
         Customer customer = new Customer();
         customer.setAddress("42 Main St");
         customer.setChatId(1L);
@@ -382,6 +401,7 @@ class PhotoPetServiceTest {
         report.setPetReport("Bella");
         report.setPets(pets2);
 
+        // Создаем мок для метода findPhotoPetById репозитория
         PhotoPet photoPet = new PhotoPet();
         photoPet.setFilePath("/directory/foo.txt");
         photoPet.setFileSize(3L);
@@ -460,8 +480,14 @@ class PhotoPetServiceTest {
         photoPet2.setMediaType("Media Type");
         photoPet2.setPets(pets3);
         photoPet2.setReport(report2);
+
+        // Вызываем метод findPhotoPet и сохраняем результат
         PhotoPet actualSavePhotoReportResult = photoPetService.savePhotoReport(photoPet2);
+
+        // Проверяем, что метод findPhotoPetById был вызван с правильным аргументом
         verify(photoPetRepository).save(Mockito.<PhotoPet>any());
+
+        // Проверяем, что результат метода совпадает с ожидаемым объектом PhotoPet
         assertSame(photoPet, actualSavePhotoReportResult);
     }
 }
