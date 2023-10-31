@@ -37,6 +37,7 @@ public class CustomerController {
                 )
         )
 })
+@ResponseStatus(HttpStatus.CREATED)
     @GetMapping("/get-customers")
     public ResponseEntity <List<Customer>> getAllCustomers() {
         return ResponseEntity.ok(customerService.getCustomers());
@@ -52,6 +53,7 @@ public class CustomerController {
                     )
             )
     })
+    @ResponseStatus(HttpStatus.CREATED)
     @GetMapping("{id}")
     public ResponseEntity <Customer> getCustomerById(
             @Parameter (description = "Поиск клиента с данным id")

@@ -146,9 +146,10 @@ public ResponseEntity<Report> createReport(@RequestBody Report report) {
 
             }
     )
-    @GetMapping("{id}/photos")
-    public ResponseEntity<List<PhotoPet>> getPhotosByReportId(@PathVariable Long id) {
-        return ResponseEntity.ok(reportService.getAllPhotoByReportId(id));
+    @ResponseStatus(HttpStatus.CREATED)
+    @GetMapping("{reportId}/photos")
+    public ResponseEntity<PhotoPet> getPhotosByReportId(@PathVariable Long reportId) {
+        return ResponseEntity.ok(reportService.getPhotoPetByReportId(reportId));
     }
 
 }

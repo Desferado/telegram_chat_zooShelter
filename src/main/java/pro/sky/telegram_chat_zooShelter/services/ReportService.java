@@ -11,7 +11,6 @@ import pro.sky.telegram_chat_zooShelter.model.Pets;
 import pro.sky.telegram_chat_zooShelter.model.PhotoPet;
 import pro.sky.telegram_chat_zooShelter.model.Report;
 import pro.sky.telegram_chat_zooShelter.repository.PetsRepository;
-import pro.sky.telegram_chat_zooShelter.repository.PhotoPetRepository;
 import pro.sky.telegram_chat_zooShelter.repository.ReportRepository;
 
 import java.time.LocalDate;
@@ -28,12 +27,13 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final PetsService petService;
     private final PetsRepository petsRepository;
-    private PhotoPetRepository photoPet;
+    private final PhotoPetService photoPetService;
 
-    public ReportService(ReportRepository reportRepository, PetsService petService, PetsRepository petsRepository) {
+    public ReportService(ReportRepository reportRepository, PetsService petService, PetsRepository petsRepository, PhotoPetService photoPetService) {
         this.petService = petService;
         this.reportRepository = reportRepository;
         this.petsRepository = petsRepository;
+        this.photoPetService = photoPetService;
     }
 
     /**
@@ -114,11 +114,7 @@ public class ReportService {
         LocalDate localDate = LocalDate.now();
         LocalDateTime startTime = localDate.atStartOfDay();
         LocalDateTime finishTime = LocalTime.MAX.atDate(localDate);
-        Report todayReport = reportRepository.findFirstByPetsIdAndPetReportNotNullAndDateBetween(petsId, startTime, finishTime);
-        if (todayReport == null) {
-            return null;
-        }
-        return todayReport;
+        return reportRepository.findFirstByPetsIdAndPetReportNotNullAndDateBetween(petsId, startTime, finishTime);
     }
 
     /**
@@ -139,9 +135,9 @@ public class ReportService {
      *
      * @return список питомцев
      */
-    public List<Pets> findPetsWithoutTodayReport(Customer customer) {
+    public List<Pets> findPetsWithoutTodayReport(Long petsId) {
         List<Pets> petWithoutReportList = new ArrayList<>();
-        for (Pets pets : petsRepository.findPetsByCustomer(customer)) {
+        for (Pets pets : petsRepository.findAllByProbationStatusContainsIgnoreCase("процесс")) {
             Report report = findTodayCompletedReportsByPetId(pets.getId());
             if (null == report) {
                 petWithoutReportList.add(pets);
@@ -166,8 +162,8 @@ public class ReportService {
         }
         return customerWithoutReportList;
     }
-    public  List<PhotoPet> getAllPhotoByReportId(Long id){
-        return photoPet.findAllByReport_Id(id);
+    public  PhotoPet getPhotoPetByReportId(Long reportId){
+        return photoPetService.findPhotoPetByReport_Id(reportId);
     }
 }
 

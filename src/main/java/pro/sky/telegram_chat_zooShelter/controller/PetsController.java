@@ -39,6 +39,7 @@ public class PetsController {
                             )
                     )
             })
+    @ResponseStatus(HttpStatus.CREATED)
     @GetMapping("/get-pets")
     public ResponseEntity<List<Pets>> getAllPets() {
         return ResponseEntity.ok(petsService.getPets());
@@ -54,6 +55,7 @@ public class PetsController {
                             )
                     )
             })
+    @ResponseStatus(HttpStatus.CREATED)
     @GetMapping("{id}")
     public ResponseEntity <Pets> getPetById(
             @Parameter(description = "Поиск животного с данным id")
@@ -77,6 +79,7 @@ public class PetsController {
                             )
                     )
             })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ResponseEntity <Pets> createPet(@RequestBody (required = false) Pets pet){
         return ResponseEntity.ok(petsService.createPet(pet));

@@ -23,7 +23,7 @@ public class PhotoPet {
     @ManyToOne
     @JoinColumn(name = "id_pets")
     private Pets pets;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_report")
     private Report report;
 

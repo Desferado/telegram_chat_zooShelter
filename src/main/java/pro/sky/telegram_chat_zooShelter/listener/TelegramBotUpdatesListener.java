@@ -2,6 +2,7 @@ package pro.sky.telegram_chat_zooShelter.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -14,14 +15,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
+
 import pro.sky.telegram_chat_zooShelter.constants.Icon;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
 import pro.sky.telegram_chat_zooShelter.services.CustomerService;
 import pro.sky.telegram_chat_zooShelter.services.KeyBoardService;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import pro.sky.telegram_chat_zooShelter.services.PhotoPetService;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Comparator;
+
 import java.util.List;
+
 
 import static pro.sky.telegram_chat_zooShelter.constants.Constants.*;
 @Service
@@ -33,16 +40,17 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private TelegramBot telegramBot;
     private User telegramCustomer;
     private final CustomerService customer;
+    private final CustomerService customerService;
 
     private String nameCustomer;
     private String tlText;
     @Value("${telegram.bot.token}")
     private String token;
 
-
-    public TelegramBotUpdatesListener(TelegramBot telegramBot, CustomerService customer) {
+    public TelegramBotUpdatesListener(TelegramBot telegramBot, CustomerService customer, PhotoPetService photoPetService, CustomerService customerService) {
         this.telegramBot = telegramBot;
         this.customer = customer;
+        this.customerService = customerService;
     }
 
     @PostConstruct
@@ -71,18 +79,50 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 telegramCustomer.username(),
                                 null,
                                 null,
+                                null,
+                                null,
                                 null
                         ));
                     }
                 } else if (update.message().photo() != null ) {
-                    responseOnCommand (1284536796, "Клиент прислал фото");
+                    responseOnCommand(1284536796, "Клиент " + telegramCustomer.firstName() +
+                                    " id = "
+                            + " прислал фото");
+
+//                    BufferedImage bufferedImage = ImageIO.read( multipartFile.getInputStream());
+//                    File outputfile = new File("saved.png");
+//                    try {
+//                        ImageIO.write(bufferedImage, "png", outputfile);
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                    try {
+//                        BufferedImage image = ImageIO.read(new File("saved.png"));
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
+                    PhotoSize[] photos = update.message().photo();
+                    PhotoSize photo = Arrays.stream(photos)
+                            .max(Comparator.comparing(PhotoSize::fileSize)).orElse(null);
+                    Long chatId = update.message().chat().id();
+                    Customer customerReport = customerService.findCustomerByChatId(chatId);
+                    Long petsId = customerReport.getPets().getId();
+//                    if (photo != null && petsId != null) {
+//                        try {
+//                            photoPetService.uploadPhotoPet(petsId, photo);
+//                        } catch (IOException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
                     SendPhoto sendPhoto = new SendPhoto();
                     sendPhoto.setChatId(1284536796L);
                     String fileId = sendPhoto.getFileField();
                     sendPhoto.setPhoto(new InputFile(fileId));
 //                    SendResponse response = telegramBot.execute(sendPhoto);
+
                 } else if (tlText.toLowerCase().contains("отчет")) {
-                    responseOnCommand (1284536796, LocalDate.now() + " - Клиент " + nameCustomer
+                    responseOnCommand (1284536796, LocalDate.now() + " - Клиент "
+                            + telegramCustomer.firstName()
                             + " id" + telegramCustomer.id()
                             + " прислал отчет: " + tlText);
                 } else if (tlText.toLowerCase().contains("контакт")){
@@ -414,4 +454,4 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private InlineKeyboardMarkup prepareKeyboardStart() {
         return KeyBoardService.prepareKeyboardStart("кошек" + Icon.CAT_Icon.get(), "собак"+Icon.DOG_Icon.get());
     }
-    }
+}
