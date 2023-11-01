@@ -147,10 +147,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         responseOnCommand.responseOnCommandText(chatId, listDocuments);
                         break;
                     case("RECOMMENDATIONS" + "кошек"):
-                        responseOnCommand.responseOnCommandRecommendation(chatId, recommendations, "кошек");
+                        responseOnCommand.responseOnCommandCatRecommendation(chatId, recommendations);
                         break;
                     case("RECOMMENDATIONS" + "собак"):
-                        responseOnCommand.responseOnCommandRecommendation(chatId, recommendations, "собак");
+                        responseOnCommand.responseOnCommandDogRecommendation(chatId, recommendations);
                         break;
                     case("REJECTION" + "кошек"), ("REJECTION" + "собак"):
                         responseOnCommand.responseOnCommandText(chatId, rejection);

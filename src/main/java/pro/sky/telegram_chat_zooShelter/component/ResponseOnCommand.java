@@ -60,9 +60,14 @@ public class ResponseOnCommand {
         sendMessages.sendMessage(1284536796L, "Клиент" + nameCustomer + " нуждается\n" +
                 " в консультации. @" + telegramCustomer.username());
     }
-    public void responseOnCommandRecommendation(Long chatId, String message, String shelter){
+    public void responseOnCommandCatRecommendation(Long chatId, String message){
         SendMessage sendMess = new SendMessage(chatId, message);
-        sendMess.replyMarkup(KeyBoardService.prepareKeyboardCatRecommendation(shelter));
+        sendMess.replyMarkup(KeyBoardService.prepareKeyboardCatRecommendation("кошек"));
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    public void responseOnCommandDogRecommendation(Long chatId, String message){
+        SendMessage sendMess = new SendMessage(chatId, message);
+        sendMess.replyMarkup(KeyBoardService.prepareKeyboardDogRecommendation("собак"));
         SendResponse response = telegramBot.execute(sendMess);
     }
     public void responseOnCommandGetPet(Long chatId, String message, String shelter){
