@@ -12,12 +12,12 @@ import org.springframework.lang.Nullable;
 
 @Component
 
-public class SendNotification {
-    private static final Logger LOG = LoggerFactory.getLogger(SendNotification.class);
+public class SendMessages {
+    private static final Logger LOG = LoggerFactory.getLogger(SendMessages.class);
     private  final TelegramBot telegramBot;
 
 
-    public SendNotification(TelegramBot telegramBot) {
+    public SendMessages(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
     }
 
