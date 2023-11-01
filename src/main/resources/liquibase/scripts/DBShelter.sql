@@ -123,3 +123,5 @@ ALTER TABLE report ADD COLUMN if not exists data BYTEA;
 ALTER TABLE photo_pet DROP COLUMN data;
 ALTER TABLE photo_pet ADD COLUMN if not exists data BYTEA;
 ALTER TABLE customer ADD COLUMN if not exists id_shelters BIGINT references shelters;
+--changeset denis:16
+ALTER TABLE photo_pet ADD COLUMN if not exists file_name varchar (50);

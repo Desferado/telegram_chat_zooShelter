@@ -18,6 +18,7 @@ public class PhotoPet {
     private String filePath;
     private long fileSize;
     private String mediaType;
+    private String fileName;
 
     @JsonIgnore
     @ManyToOne
@@ -43,6 +44,7 @@ public class PhotoPet {
     public void setMediaType(String mediaType) {
         this.mediaType = mediaType;
     }
+
 
     @Override
     public boolean equals(Object o) {

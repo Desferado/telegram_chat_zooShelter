@@ -38,33 +38,25 @@ public class PhotoPetController {
         this.photoPetRepository = photoPetRepository;
     }
     @Operation(
-            summary = "Загрузка фотографии в базу",
+            summary = "Загрузка фотографии в локальную папку",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Загрузка фотографии в базу",
+                            description = "Загрузка фотографии в локальную папку",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = PhotoPet.class)
                             )
                     )
             })
-    @PostMapping(value = "report/{reportId}/photoPet", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadAvatar(@PathVariable Long reportId,
+    @PostMapping(value = "report/{petId}/photoPet", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadPhoto(@PathVariable Long petId,
                                                @RequestParam MultipartFile photoPet) throws IOException {
         if (photoPet.getSize() > 1024 * 300){
             return ResponseEntity.badRequest().body("File is too big.");
         }
-        photoPetService.uploadPhotoPet(reportId, photoPet);
+        photoPetService.uploadPhotoPet(petId, photoPet);
         return ResponseEntity.ok().build();
     }
-//    @GetMapping(value = "/{petId}/photoPet")
-//    public ResponseEntity<byte[]> downloadPhotoPet(@PathVariable Long petId) {
-//        PhotoPet photoPet = photoPetService.findPhotoPet(petId);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.parseMediaType(photoPet.getMediaType()));
-//        headers.setContentLength(photoPet.getData().length);
-//        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(photoPet.getData());
-//    }
 @Operation(
         summary = "Получение фотографии из базы",
         responses = {
@@ -88,7 +80,27 @@ public class PhotoPetController {
             is.transferTo(os);
         }
     }
-    @ResponseStatus(HttpStatus.CREATED)
+
+//    @Operation(
+//            summary = "Загрузка фотографии в базу",
+//            responses = {
+//                    @ApiResponse(
+//                            responseCode = "200",
+//                            description = "Загрузка фотографии в базу",
+//                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+//                                    schema = @Schema(implementation = PhotoPet.class)
+//                            )
+//                    )
+//            })
+//    @PostMapping(value = "report/{petId}/photoPet", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<String> uploadPhotoPet(@PathVariable Long petId,
+//                                               @RequestParam MultipartFile photoPet) throws IOException {
+//        if (photoPet.getSize() > 1024 * 300){
+//            return ResponseEntity.badRequest().body("File is too big.");
+//        }
+//        photoPetService.uploadPhotoPet(petId, photoPet);
+//        return ResponseEntity.ok().build();
+//    }
     @GetMapping
     public ResponseEntity<List<PhotoPetDTO>> getAllPhotoPet(
             @RequestParam("page") Integer pageNumber,

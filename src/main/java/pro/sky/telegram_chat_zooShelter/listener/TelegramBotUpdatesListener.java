@@ -2,7 +2,6 @@ package pro.sky.telegram_chat_zooShelter.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
-import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -14,18 +13,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
 
 import pro.sky.telegram_chat_zooShelter.constants.Icon;
+import pro.sky.telegram_chat_zooShelter.controller.PhotoPetController;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
+
 import pro.sky.telegram_chat_zooShelter.services.CustomerService;
 import pro.sky.telegram_chat_zooShelter.services.KeyBoardService;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import pro.sky.telegram_chat_zooShelter.services.PhotoPetService;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Comparator;
+
 
 import java.util.List;
 
@@ -40,17 +38,17 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private TelegramBot telegramBot;
     private User telegramCustomer;
     private final CustomerService customer;
-    private final CustomerService customerService;
+    private final PhotoPetService photoPetService;
 
     private String nameCustomer;
     private String tlText;
     @Value("${telegram.bot.token}")
     private String token;
 
-    public TelegramBotUpdatesListener(TelegramBot telegramBot, CustomerService customer, PhotoPetService photoPetService, CustomerService customerService) {
+    public TelegramBotUpdatesListener(TelegramBot telegramBot, CustomerService customer, PhotoPetController photoPetController, PhotoPetService photoPetService) {
         this.telegramBot = telegramBot;
         this.customer = customer;
-        this.customerService = customerService;
+        this.photoPetService = photoPetService;
     }
 
     @PostConstruct
@@ -88,38 +86,18 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     responseOnCommand(1284536796, "Клиент " + telegramCustomer.firstName() +
                                     " id = "
                             + " прислал фото");
-
-//                    BufferedImage bufferedImage = ImageIO.read( multipartFile.getInputStream());
-//                    File outputfile = new File("saved.png");
-//                    try {
-//                        ImageIO.write(bufferedImage, "png", outputfile);
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                    try {
-//                        BufferedImage image = ImageIO.read(new File("saved.png"));
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    }
-                    PhotoSize[] photos = update.message().photo();
-                    PhotoSize photo = Arrays.stream(photos)
-                            .max(Comparator.comparing(PhotoSize::fileSize)).orElse(null);
-                    Long chatId = update.message().chat().id();
-                    Customer customerReport = customerService.findCustomerByChatId(chatId);
-                    Long petsId = customerReport.getPets().getId();
-//                    if (photo != null && petsId != null) {
-//                        try {
-//                            photoPetService.uploadPhotoPet(petsId, photo);
-//                        } catch (IOException e) {
-//                            throw new RuntimeException(e);
+//                    Long chatId = update.message().chat().id();
+//                    Pets pets = customer.findCustomerByChatId(chatId).getPets();
+//                    List<PhotoPet> photoPets = photoPetService.findAllByPets(pets);
+//                    String date = LocalDate.now().toString();
+//                    for (PhotoPet photo: photoPets ) {
+//                        if(!photo.getFileName().contains("date")){
+//
 //                        }
+//
 //                    }
-                    SendPhoto sendPhoto = new SendPhoto();
-                    sendPhoto.setChatId(1284536796L);
-                    String fileId = sendPhoto.getFileField();
-                    sendPhoto.setPhoto(new InputFile(fileId));
-//                    SendResponse response = telegramBot.execute(sendPhoto);
 
+//
                 } else if (tlText.toLowerCase().contains("отчет")) {
                     responseOnCommand (1284536796, LocalDate.now() + " - Клиент "
                             + telegramCustomer.firstName()

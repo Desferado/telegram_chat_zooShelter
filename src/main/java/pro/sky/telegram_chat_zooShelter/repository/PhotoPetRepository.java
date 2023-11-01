@@ -16,6 +16,7 @@ public interface PhotoPetRepository extends JpaRepository<PhotoPet, Long> {
     Optional<PhotoPet> findPhotoPetById(Long reportId);
     PhotoPet findAllByReport (Report report);
     List<PhotoPet> findAllByPets (Pets pets);
+    PhotoPet findPhotoPetByPets_Id(Long petId);
 
     @Override
     @NotNull

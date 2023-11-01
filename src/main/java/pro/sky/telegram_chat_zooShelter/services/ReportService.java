@@ -25,15 +25,12 @@ public class ReportService {
     private final static Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
     private final ReportRepository reportRepository;
-    private final PetsService petService;
     private final PetsRepository petsRepository;
-    private final PhotoPetService photoPetService;
 
-    public ReportService(ReportRepository reportRepository, PetsService petService, PetsRepository petsRepository, PhotoPetService photoPetService) {
-        this.petService = petService;
+
+    public ReportService(ReportRepository reportRepository, PetsService petService, PetsRepository petsRepository) {
         this.reportRepository = reportRepository;
         this.petsRepository = petsRepository;
-        this.photoPetService = photoPetService;
     }
 
     /**
@@ -161,9 +158,6 @@ public class ReportService {
             }
         }
         return customerWithoutReportList;
-    }
-    public  PhotoPet getPhotoPetByReportId(Long reportId){
-        return photoPetService.findPhotoPetByReport_Id(reportId);
     }
 }
 

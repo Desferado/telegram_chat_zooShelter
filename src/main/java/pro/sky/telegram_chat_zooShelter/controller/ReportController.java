@@ -131,25 +131,25 @@ public ResponseEntity<Report> createReport(@RequestBody Report report) {
         Report created = reportService.createReport(report);
         return ResponseEntity.ok(created);
         }
-    @Operation(
-            tags = "\uD83D\uDCCB Report store",
-            summary = "Search for all photos by report id",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Found reports",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = List.class)
-                            )
-                    ),
-
-            }
-    )
-    @ResponseStatus(HttpStatus.CREATED)
-    @GetMapping("{reportId}/photos")
-    public ResponseEntity<PhotoPet> getPhotosByReportId(@PathVariable Long reportId) {
-        return ResponseEntity.ok(reportService.getPhotoPetByReportId(reportId));
-    }
+//    @Operation(
+//            tags = "\uD83D\uDCCB Report store",
+//            summary = "Search for all photos by report id",
+//            responses = {
+//                    @ApiResponse(
+//                            responseCode = "200",
+//                            description = "Found reports",
+//                            content = @Content(
+//                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+//                                    schema = @Schema(implementation = List.class)
+//                            )
+//                    ),
+//
+//            }
+//    )
+//    @ResponseStatus(HttpStatus.CREATED)
+//    @GetMapping("{reportId}/photos")
+//    public ResponseEntity<PhotoPet> getPhotosByReportId(@PathVariable Long reportId) {
+//        return ResponseEntity.ok(reportService.getPhotoPetByReportId(reportId));
+//    }
 
 }

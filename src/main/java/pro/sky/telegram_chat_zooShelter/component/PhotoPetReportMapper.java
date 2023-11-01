@@ -1,6 +1,7 @@
-package pro.sky.telegram_chat_zooShelter;
+package pro.sky.telegram_chat_zooShelter.component;
 
 import org.springframework.stereotype.Component;
+import pro.sky.telegram_chat_zooShelter.PhotoPetDTO;
 import pro.sky.telegram_chat_zooShelter.model.PhotoPet;
 
 @Component

@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 import lombok.*;
 
+import java.util.List;
+
 // Таблица: Пользователь (Customer) в БД
 
 @Entity
@@ -33,6 +35,7 @@ public class Customer {
     @OneToOne
     @JoinColumn(name = "id_shelters")
     Shelters shelters;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

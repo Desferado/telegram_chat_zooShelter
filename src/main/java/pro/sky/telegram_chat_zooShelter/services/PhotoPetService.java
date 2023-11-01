@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pro.sky.telegram_chat_zooShelter.PhotoPetDTO;
-import pro.sky.telegram_chat_zooShelter.PhotoPetReportMapper;
+import pro.sky.telegram_chat_zooShelter.component.PhotoPetReportMapper;
 import pro.sky.telegram_chat_zooShelter.model.Pets;
 import pro.sky.telegram_chat_zooShelter.model.PhotoPet;
 import pro.sky.telegram_chat_zooShelter.repository.PhotoPetRepository;
@@ -29,20 +29,23 @@ public class PhotoPetService implements PhotoPetInterface{
     private String coversDir;
 
     private final PetsService petsService;
+
     private final PhotoPetRepository photoPetRepository;
     private final PhotoPetReportMapper photoPetReportMapper;
+
 
     public PhotoPetService(PetsService petsService, PhotoPetRepository photoPetRepository, PhotoPetReportMapper photoPetReportMapper) {
         this.petsService = petsService;
         this.photoPetRepository = photoPetRepository;
         this.photoPetReportMapper = photoPetReportMapper;
+
     }
 
     public void uploadPhotoPet(Long petId, MultipartFile file) throws IOException {
         Pets pets = petsService.findPetById(petId);
-
-        Path filePath = Path.of(coversDir, LocalDate.now() + " Фото питомца с id = " + petId
-                + "." + getExtension(Objects.requireNonNull(file.getOriginalFilename())));
+        String nameFile = LocalDate.now() + " Фото питомца с id = " + petId
+                + "." + getExtension(Objects.requireNonNull(file.getOriginalFilename()));
+        Path filePath = Path.of(coversDir, nameFile);
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
 
@@ -60,7 +63,7 @@ public class PhotoPetService implements PhotoPetInterface{
         photoPet.setFilePath(filePath.toString());
         photoPet.setFileSize(file.getSize());
         photoPet.setMediaType(file.getContentType());
-
+        photoPet.setFileName(nameFile);
         photoPetRepository.save(photoPet);
     }
 
@@ -69,10 +72,10 @@ public class PhotoPetService implements PhotoPetInterface{
     }
 
     public PhotoPet findPhotoPet(Long petId) {
-        return photoPetRepository.findPhotoPetById(petId).orElse(new PhotoPet());
+        return photoPetRepository.findPhotoPetByPets_Id(petId);
     }
-    public List<PhotoPet> findAllPhotoPet() {
-        return photoPetRepository.findAll();
+    public List<PhotoPet> findAllByPets(Pets pets) {
+        return photoPetRepository.findAllByPets(pets);
     }
     public PhotoPet findPhotoPetByReport_Id(Long reportId) {
         return photoPetRepository.findPhotoPetById(reportId).orElse(new PhotoPet());
