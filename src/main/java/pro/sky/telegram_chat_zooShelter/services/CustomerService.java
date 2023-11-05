@@ -2,10 +2,11 @@ package pro.sky.telegram_chat_zooShelter.services;
 
 import org.springframework.stereotype.Service;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
-import pro.sky.telegram_chat_zooShelter.model.Report;
+import pro.sky.telegram_chat_zooShelter.model.Pets;
 import pro.sky.telegram_chat_zooShelter.repository.CustomerRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -28,6 +29,7 @@ public class CustomerService {
     public Customer findCustomerByChatId(Long chatId) {
         return customerRepository.findCustomerByChatId(chatId).orElse(null);
     }
+    public Customer findCustomerByPets(Pets pets){ return customerRepository.findCustomerByPets(pets).orElse(null);}
     public Customer createCustomer(Customer customer) {
         return customerRepository.save(customer);
     }

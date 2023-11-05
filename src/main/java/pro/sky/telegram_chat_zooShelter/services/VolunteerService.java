@@ -74,4 +74,7 @@ public class VolunteerService {
         }
         return volunteer;
     }
+    public Volunteer findVolunteerByShelters( Long  idShelters){
+        return volunteerRepository.findVolunteerByShelters_Id(idShelters).orElse(null);
+    }
 }

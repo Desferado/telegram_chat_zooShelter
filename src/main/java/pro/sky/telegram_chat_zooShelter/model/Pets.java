@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -24,7 +25,7 @@ public class Pets {
     private String breed;
     private String probationStatus;  //статус испытателного срока
     private LocalDate decisionDate ; // дата принятия решения по усыновлению
-    private Long limit_probation;    // испытательный
+    private Integer limit_probation;    // испытательный
     @JsonIgnore
     @OneToOne
     @JoinColumn(name = "id_customer")
@@ -33,7 +34,6 @@ public class Pets {
     @ManyToOne
     @JoinColumn(name = "id_shelter")
     private Shelters shelters;
-
 
 
     @Override

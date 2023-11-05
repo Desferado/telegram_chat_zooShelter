@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
+import pro.sky.telegram_chat_zooShelter.model.Pets;
 import pro.sky.telegram_chat_zooShelter.model.Report;
 
 import java.util.List;
@@ -18,4 +19,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     void deleteCustomerById(Long id);
 
     Optional<Customer> findCustomerByChatId(Long chatId);
+    Optional<Customer> findCustomerByPets(Pets pets);
 }

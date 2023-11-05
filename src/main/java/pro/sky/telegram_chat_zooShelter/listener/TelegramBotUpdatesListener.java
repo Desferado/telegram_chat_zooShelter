@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
+
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,11 @@ import pro.sky.telegram_chat_zooShelter.component.ResponseOnCommand;
 import pro.sky.telegram_chat_zooShelter.component.SendMessages;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
 import pro.sky.telegram_chat_zooShelter.services.CustomerService;
+import pro.sky.telegram_chat_zooShelter.services.PhotoPetService;
+import pro.sky.telegram_chat_zooShelter.model.UploadPhoto;
+import com.pengrad.telegrambot.model.PhotoSize;
+//import org.telegram.telegrambots.meta.api.objects.PhotoSize;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import static pro.sky.telegram_chat_zooShelter.constants.Constants.*;
@@ -25,6 +31,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private TelegramBot telegramBot;
     private User telegramCustomer;
     private final CustomerService customer;
+
+    private final PhotoPetService photoPetService;
     private final SendMessages sendMessages;
     private  final ResponseOnCommand responseOnCommand;
 
@@ -33,9 +41,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Value("${telegram.bot.token}")
     private String token;
 
-    public TelegramBotUpdatesListener(TelegramBot telegramBot, CustomerService customer, SendMessages sendMessages, ResponseOnCommand responseOnCommand) {
+    public TelegramBotUpdatesListener(TelegramBot telegramBot, CustomerService customer, PhotoPetService photoPetService, SendMessages sendMessages, ResponseOnCommand responseOnCommand) {
         this.telegramBot = telegramBot;
         this.customer = customer;
+        this.photoPetService = photoPetService;
         this.sendMessages = sendMessages;
         this.responseOnCommand = responseOnCommand;
     }
@@ -72,15 +81,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     sendMessages.sendMessage(1284536796L, "Клиент " + telegramCustomer.firstName() +
                                     " id = "
                             + " прислал фото");
-//                    Long chatId = update.message().chat().id();
-//                    Pets pets = customer.findCustomerByChatId(chatId).getPets();
-//                    List<PhotoPet> photoPets = photoPetService.findAllByPets(pets);
-//                    String date = LocalDate.now().toString();
-//                    for (PhotoPet photo: photoPets ) {
-//                        if(!photo.getFileName().contains("date")){
-//
-//                        }
-//
+                    PhotoSize[] photos = update.message().photo();
+                    Long chatId = update.message().chat().id();
+                    Long petsId = customer.findCustomerByChatId(chatId).getPets().getId();
+//                    try {
+//                        photoPetService.uploadPhotoPet(petsId,UploadPhoto.createMultipartFileFromPhotoSize(photos));
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
 //                    }
                 } else if (tlText.toLowerCase().contains("отчет")) {
                     sendMessages.sendMessage (1284536796L, LocalDate.now() + " - Клиент "

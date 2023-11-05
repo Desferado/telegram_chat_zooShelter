@@ -83,12 +83,12 @@ public class PetsService {
     public String getProbationStatus (Long id){
         return findPetById(id).getProbationStatus();
     }
-    public Long setAddDays(int addDays, Long id){
+    public Integer setAddDays(int addDays, Long id){
         Pets pet = findPetById(id);
         if (pet.getLimit_probation() == null){
-            pet.setLimit_probation(0L);
+            pet.setLimit_probation(0);
         }
-        Long limit = pet.getLimit_probation();
+        Integer limit = pet.getLimit_probation();
         limit = limit + addDays;
         pet.setLimit_probation(limit);
         updatePet(pet);
