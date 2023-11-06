@@ -54,7 +54,7 @@ public class PhotoPetController {
         if (photoPet.getSize() > 1024 * 300){
             return ResponseEntity.badRequest().body("File is too big.");
         }
-        photoPetService.uploadPhotoPet(petId, photoPet);
+        photoPetService.savePhoto(petId, photoPet);
         return ResponseEntity.ok().build();
     }
 @Operation(

@@ -1,17 +1,10 @@
 package pro.sky.telegram_chat_zooShelter.model;
 
-
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import com.pengrad.telegrambot.model.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.File;
-//import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-//import java.io.*;
+import java.io.*;
 
 
 public class UploadPhoto {

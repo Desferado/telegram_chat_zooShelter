@@ -76,15 +76,16 @@ public class ReportService {
      * @param report - The entity of the report we want to create.
      * @return - created the report
      */
-    public Report createReport(Report report) {
+    public Report createReport(Report report, Long petsId) {
         if (report == null) {
             throw new IllegalArgumentException("Отчет не может быть пустым.");
         }
-
         try {
+//            reportRepository.save(report);
+            Pets pets = petsRepository.findPetsById(petsId).orElse(null);
+            report.setPets(pets);
             return reportRepository.save(report);
         } catch (DataAccessException e) {
-
             throw new RuntimeException("Произошла ошибка при сохранении отчета.", e);
         }
     }

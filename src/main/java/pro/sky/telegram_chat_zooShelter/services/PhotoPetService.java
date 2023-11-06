@@ -42,13 +42,9 @@ public class PhotoPetService implements PhotoPetInterface{
     }
 
     public void uploadPhotoPet(Long petId, MultipartFile file) throws IOException {
-        Pets pets = petsService.findPetById(petId);
         String nameFile = LocalDate.now() + " Фото питомца с id = " + petId
                 + "." + getExtension(Objects.requireNonNull(file.getOriginalFilename()));
         Path filePath = Path.of(coversDir, nameFile);
-        Files.createDirectories(filePath.getParent());
-        Files.deleteIfExists(filePath);
-
         try (InputStream is = file.getInputStream();
              OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
              BufferedInputStream bis = new BufferedInputStream(is, 1024);
@@ -57,14 +53,6 @@ public class PhotoPetService implements PhotoPetInterface{
             bis.transferTo(bos);
         }
 
-        PhotoPet photoPet = findPhotoPet(petId);
-        photoPetRepository.save(photoPet);
-        photoPet.setPets(pets);
-        photoPet.setFilePath(filePath.toString());
-        photoPet.setFileSize(file.getSize());
-        photoPet.setMediaType(file.getContentType());
-        photoPet.setFileName(nameFile);
-        photoPetRepository.save(photoPet);
     }
 
     private String getExtension(String fileName) {
@@ -81,6 +69,22 @@ public class PhotoPetService implements PhotoPetInterface{
         return photoPetRepository.findPhotoPetById(reportId).orElse(new PhotoPet());
     }
 
+    public void savePhoto (Long petId, MultipartFile file) throws IOException{
+        Pets pets = petsService.findPetById(petId);
+        String nameFile = LocalDate.now() + " Фото питомца с id = " + petId
+                + "." + getExtension(Objects.requireNonNull(file.getOriginalFilename()));
+        Path filePath = Path.of(coversDir, nameFile);
+        Files.createDirectories(filePath.getParent());
+        Files.deleteIfExists(filePath);
+        PhotoPet photoPet = findPhotoPet(petId);
+        photoPetRepository.save(photoPet);
+        photoPet.setPets(pets);
+        photoPet.setFilePath(filePath.toString());
+        photoPet.setFileSize(file.getSize());
+        photoPet.setMediaType(file.getContentType());
+        photoPet.setFileName(nameFile);
+        photoPetRepository.save(photoPet);
+    }
     @Override
     public List<PhotoPetDTO> getAllPhotoPet(Integer pageNumber, Integer pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
