@@ -18,12 +18,13 @@ public class PhotoPet {
     private String filePath;
     private long fileSize;
     private String mediaType;
+    private String fileName;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_pets")
     private Pets pets;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_report")
     private Report report;
 
@@ -43,6 +44,7 @@ public class PhotoPet {
     public void setMediaType(String mediaType) {
         this.mediaType = mediaType;
     }
+
 
     @Override
     public boolean equals(Object o) {

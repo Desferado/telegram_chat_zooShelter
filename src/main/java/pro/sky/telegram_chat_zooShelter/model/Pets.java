@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,14 +23,17 @@ public class Pets {
     private String name;
     private String type_pets;
     private String breed;
-    @ManyToOne
+    private String probationStatus;  //статус испытателного срока
+    private LocalDate decisionDate ; // дата принятия решения по усыновлению
+    private Integer limit_probation;    // испытательный
+    @JsonIgnore
+    @OneToOne
     @JoinColumn(name = "id_customer")
     private Customer customer;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_shelter")
     private Shelters shelters;
-    private LocalDateTime decisionDate; // дата принятия решения по усыновлению
 
 
     @Override
@@ -43,6 +47,6 @@ public class Pets {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, age, name, type_pets, breed, customer, shelters);
+        return Objects.hash(id, age, name, type_pets, probationStatus, decisionDate, breed, customer, shelters);
     }
 }

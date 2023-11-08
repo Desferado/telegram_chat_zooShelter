@@ -1,9 +1,11 @@
 package pro.sky.telegram_chat_zooShelter.repository;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import pro.sky.telegram_chat_zooShelter.model.Report;
-
+import java.util.Optional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
@@ -16,6 +18,11 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
      */
     Report findReportByPetsIdAndDateBetween(Long petsId, LocalDateTime startTime, LocalDateTime finishTime);
 
+    @Override
+    @NotNull
+    List<Report> findAll();
     Report findFirstByPetsIdAndPetReportNotNullAndDateBetween(Long petsId, LocalDateTime startTime, LocalDateTime finishTime);
+
+    Optional<Report> findReportByPets_Id(Long petId);
 
 }

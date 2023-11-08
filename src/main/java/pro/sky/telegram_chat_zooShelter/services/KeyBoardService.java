@@ -2,6 +2,7 @@ package pro.sky.telegram_chat_zooShelter.services;
 
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import pro.sky.telegram_chat_zooShelter.constants.Icon;
 
 public class KeyBoardService {
     public static InlineKeyboardMarkup prepareKeyboardStart(String text1, String text2) {
@@ -137,5 +138,11 @@ public class KeyBoardService {
         markupInline.addRow(button5);
         markupInline.addRow(button6);
         return markupInline;
+    }
+    /** метод создает инлайн клавиатуру после отправки команды "/start"
+     * @return клавиатура с подсообщением
+     */
+    public static InlineKeyboardMarkup prepareKeyboardStart() {
+        return KeyBoardService.prepareKeyboardStart("кошек" + Icon.CAT_Icon.get(), "собак"+Icon.DOG_Icon.get());
     }
 }

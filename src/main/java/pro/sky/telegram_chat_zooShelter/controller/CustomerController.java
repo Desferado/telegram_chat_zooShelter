@@ -23,7 +23,6 @@ import java.util.List;
 public class CustomerController {
     private final CustomerService customerService;
 
-
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
@@ -38,6 +37,7 @@ public class CustomerController {
                 )
         )
 })
+@ResponseStatus(HttpStatus.CREATED)
     @GetMapping("/get-customers")
     public ResponseEntity <List<Customer>> getAllCustomers() {
         return ResponseEntity.ok(customerService.getCustomers());
@@ -53,6 +53,7 @@ public class CustomerController {
                     )
             )
     })
+    @ResponseStatus(HttpStatus.CREATED)
     @GetMapping("{id}")
     public ResponseEntity <Customer> getCustomerById(
             @Parameter (description = "Поиск клиента с данным id")

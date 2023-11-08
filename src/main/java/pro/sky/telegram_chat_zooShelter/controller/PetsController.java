@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegram_chat_zooShelter.model.Pets;
+import pro.sky.telegram_chat_zooShelter.repository.PetsRepository;
+import pro.sky.telegram_chat_zooShelter.services.NotificationService;
 import pro.sky.telegram_chat_zooShelter.services.PetsService;
 
 import java.util.List;
@@ -23,7 +25,7 @@ import java.util.List;
 public class PetsController {
     private final PetsService petsService;
 
-    public PetsController(PetsService petsService) {
+    public PetsController(PetsService petsService, NotificationService notificationService, PetsRepository petsRepository) {
         this.petsService = petsService;
     }
     @Operation(
@@ -37,6 +39,7 @@ public class PetsController {
                             )
                     )
             })
+    @ResponseStatus(HttpStatus.CREATED)
     @GetMapping("/get-pets")
     public ResponseEntity<List<Pets>> getAllPets() {
         return ResponseEntity.ok(petsService.getPets());
@@ -52,6 +55,7 @@ public class PetsController {
                             )
                     )
             })
+    @ResponseStatus(HttpStatus.CREATED)
     @GetMapping("{id}")
     public ResponseEntity <Pets> getPetById(
             @Parameter(description = "Поиск животного с данным id")
@@ -63,6 +67,7 @@ public class PetsController {
             return ResponseEntity.ok(pet);
         }
     }
+
     @Operation(
             summary = "Заведение животного в базу",
             responses = {
@@ -74,8 +79,9 @@ public class PetsController {
                             )
                     )
             })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity <Pets> createPet(@RequestBody Pets pet) {
+    public ResponseEntity <Pets> createPet(@RequestBody (required = false) Pets pet){
         return ResponseEntity.ok(petsService.createPet(pet));
     }
     @Operation(
@@ -98,6 +104,7 @@ public class PetsController {
             return ResponseEntity.ok(pet);
         }
     }
+
     @Operation(
             summary = "Удаление животного из базы",
             responses = {

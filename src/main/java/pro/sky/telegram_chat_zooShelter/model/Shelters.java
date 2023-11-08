@@ -1,16 +1,17 @@
 package pro.sky.telegram_chat_zooShelter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -22,6 +23,9 @@ public class Shelters {
     private String name;
     private String adress;
     private String location;
+    @JsonIgnore
+    @OneToMany(mappedBy =  "shelters")
+    List<Pets> petsList;
 
     @Override
     public boolean equals(Object o) {

@@ -1,10 +1,11 @@
 package pro.sky.telegram_chat_zooShelter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
 // Таблица: Пользователь (Customer) в БД
 
@@ -26,8 +27,14 @@ public class Customer {
     private String address; // адрес
     private String email; //почта
 
-
-    @OneToMany(mappedBy = "pets")
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "id_pets")
+    Pets pets;
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "id_shelters")
+    Shelters shelters;
 
     @Override
     public boolean equals(Object o) {

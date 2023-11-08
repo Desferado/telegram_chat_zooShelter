@@ -59,7 +59,7 @@ public class ReportController {
                             )
                     )
             })
-    @GetMapping("/{id}")
+    @GetMapping("/findreport/{id}")
     public ResponseEntity<Report> findReportById(@PathVariable Long id) {
         Report report = reportService.findReportById(id);
         if (report == null) {
@@ -81,7 +81,7 @@ public class ReportController {
                             )
                     )
             })
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletereport/{id}")
     public ResponseEntity<Report> deleteReport(@PathVariable Long id) {
         Report report = reportService.deleteReport(id);
         if (report == null) {
@@ -103,7 +103,7 @@ public class ReportController {
                             )
                     )
             })
-    @PutMapping("/{id}")
+    @PutMapping("/upatereport/{id}")
     public ResponseEntity<Report> updateReport(@RequestBody Report report) {
         Report found = reportService.updateReport(report);
         if (found == null) {
@@ -111,7 +111,6 @@ public class ReportController {
         }
         return ResponseEntity.ok(found);
     }
-
     @Operation(
             tags = "\uD83D\uDCCB Report store",
             summary = "Создать отчет в базе данных.",
@@ -120,35 +119,16 @@ public class ReportController {
                             responseCode = "200",
                             description = "Создать JSON",
                             content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = Report.class)
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Report[].class)
                             )
                     )
-}
-    )
-@PostMapping
-public ResponseEntity<Report> createReport(@RequestBody Report report) {
-        Report created = reportService.createReport(report);
+    })
+@PostMapping(value = "createreport/{petId}")
+public ResponseEntity<Report> createReport(@PathVariable Long petId,
+                                           @RequestBody Report report) {
+        Report created = reportService.createReport(report,petId);
         return ResponseEntity.ok(created);
         }
-    @Operation(
-            tags = "\uD83D\uDCCB Report store",
-            summary = "Search for all photos by report id",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Found reports",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = List.class)
-                            )
-                    ),
-
-            }
-    )
-    @GetMapping("{id}/photos")
-    public ResponseEntity<List<PhotoPet>> getPhotosByReportId(@PathVariable Long id) {
-        return ResponseEntity.ok(reportService.getAllPhotoByReportId(id));
-    }
 
 }

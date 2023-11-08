@@ -11,7 +11,6 @@ import pro.sky.telegram_chat_zooShelter.model.Pets;
 import pro.sky.telegram_chat_zooShelter.model.PhotoPet;
 import pro.sky.telegram_chat_zooShelter.model.Report;
 import pro.sky.telegram_chat_zooShelter.repository.PetsRepository;
-import pro.sky.telegram_chat_zooShelter.repository.PhotoPetRepository;
 import pro.sky.telegram_chat_zooShelter.repository.ReportRepository;
 
 import java.time.LocalDate;
@@ -26,12 +25,10 @@ public class ReportService {
     private final static Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
     private final ReportRepository reportRepository;
-    private final PetsService petService;
     private final PetsRepository petsRepository;
-    private PhotoPetRepository photoPet;
+
 
     public ReportService(ReportRepository reportRepository, PetsService petService, PetsRepository petsRepository) {
-        this.petService = petService;
         this.reportRepository = reportRepository;
         this.petsRepository = petsRepository;
     }
@@ -79,15 +76,16 @@ public class ReportService {
      * @param report - The entity of the report we want to create.
      * @return - created the report
      */
-    public Report createReport(Report report) {
+    public Report createReport(Report report, Long petsId) {
         if (report == null) {
             throw new IllegalArgumentException("Отчет не может быть пустым.");
         }
-
         try {
+//            reportRepository.save(report);
+            Pets pets = petsRepository.findPetsById(petsId).orElse(null);
+            report.setPets(pets);
             return reportRepository.save(report);
         } catch (DataAccessException e) {
-
             throw new RuntimeException("Произошла ошибка при сохранении отчета.", e);
         }
     }
@@ -114,11 +112,7 @@ public class ReportService {
         LocalDate localDate = LocalDate.now();
         LocalDateTime startTime = localDate.atStartOfDay();
         LocalDateTime finishTime = LocalTime.MAX.atDate(localDate);
-        Report todayReport = reportRepository.findFirstByPetsIdAndPetReportNotNullAndDateBetween(petsId, startTime, finishTime);
-        if (todayReport == null) {
-            return null;
-        }
-        return todayReport;
+        return reportRepository.findFirstByPetsIdAndPetReportNotNullAndDateBetween(petsId, startTime, finishTime);
     }
 
     /**
@@ -139,9 +133,9 @@ public class ReportService {
      *
      * @return список питомцев
      */
-    public List<Pets> findPetsWithoutTodayReport(Customer customer) {
+    public List<Pets> findPetsWithoutTodayReport(Long petsId) {
         List<Pets> petWithoutReportList = new ArrayList<>();
-        for (Pets pets : petsRepository.findPetsByCustomer(customer)) {
+        for (Pets pets : petsRepository.findAllByProbationStatusContainsIgnoreCase("процесс")) {
             Report report = findTodayCompletedReportsByPetId(pets.getId());
             if (null == report) {
                 petWithoutReportList.add(pets);
@@ -165,9 +159,6 @@ public class ReportService {
             }
         }
         return customerWithoutReportList;
-    }
-    public  List<PhotoPet> getAllPhotoByReportId(Long id){
-        return photoPet.findAllByReport_Id(id);
     }
 }
 

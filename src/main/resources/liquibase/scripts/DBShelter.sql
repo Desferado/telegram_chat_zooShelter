@@ -109,3 +109,22 @@ create table if not exists report
 ALTER TABLE photo_pet ADD COLUMN if not exists id_report BIGINT references report;
 --changeset denis:10
 ALTER TABLE customer ADD COLUMN if not exists id_pets BIGINT references pets;
+--changeset denis:11
+ALTER TABLE pets ALTER COLUMN decision_date TYPE Date;
+--changeset denis:12
+ALTER TABLE pets ADD COLUMN if not exists probation_status varchar(30);
+--changeset denis:13
+ALTER TABLE pets ADD COLUMN if not exists limit_probation INT;
+ALTER TABLE pets ALTER COLUMN limit_probation TYPE INT;
+--changeset denis:14
+ALTER TABLE report ADD COLUMN if not exists photo_pet_id BIGINT references photo_pet;
+--changeset denis:15
+ALTER TABLE report ADD COLUMN if not exists data BYTEA;
+ALTER TABLE photo_pet DROP COLUMN data;
+ALTER TABLE photo_pet ADD COLUMN if not exists data BYTEA;
+ALTER TABLE customer ADD COLUMN if not exists id_shelters BIGINT references shelters;
+--changeset denis:16
+ALTER TABLE photo_pet ADD COLUMN if not exists file_name varchar (50);
+
+
+
