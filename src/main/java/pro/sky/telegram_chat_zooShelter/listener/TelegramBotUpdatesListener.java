@@ -2,30 +2,23 @@ package pro.sky.telegram_chat_zooShelter.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
-import com.pengrad.telegrambot.impl.TelegramBotClient;
 import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.GetFile;
-import com.pengrad.telegrambot.response.GetFileResponse;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
 import pro.sky.telegram_chat_zooShelter.component.ResponseOnCommand;
 import pro.sky.telegram_chat_zooShelter.component.SendMessages;
-import pro.sky.telegram_chat_zooShelter.configuration.TelegramBotConfiguration;
 import pro.sky.telegram_chat_zooShelter.model.Customer;
 import pro.sky.telegram_chat_zooShelter.services.CustomerService;
-import pro.sky.telegram_chat_zooShelter.services.PhotoPetService;
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -34,8 +27,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-import static org.apache.commons.io.FileUtils.getFile;
-import static org.apache.commons.io.FilenameUtils.getExtension;
 import static pro.sky.telegram_chat_zooShelter.constants.Constants.*;
 @Service
 public class TelegramBotUpdatesListener implements UpdatesListener {
@@ -109,8 +100,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             .max(Comparator.comparing(PhotoSize::fileSize))
                             .orElse(null));
                     String f_id = photoSize.fileId();
-                    String nameFile = LocalDate.now() + " Фото питомца с id = " + petsId
-                            + "." ;
+                    String nameFile = LocalDate.now() + " Фото питомца с id = " + petsId;
                     sendMessages.sendMessage(1284536796L, "Клиент " + nameCustomer +
                             " id = "
                             + telegramCustomer.id()
@@ -122,7 +112,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         InputStream photoInputStream = new URL("https://api.telegram.org/file/bot"
                                 + telegramBot.getToken() + "/" + file.filePath()).openStream();
                         String localPath = "C:\\Users\\777\\IdeaProjects\\telegram_chat_zooShelter\\photo_pet";
-                        Path localFilePath = Paths.get(localPath, nameFile);
+                        Path localFilePath = Paths.get(localPath, nameFile + ".jpeg");
                         File localFile = localFilePath.toFile();
                         localFile.createNewFile();
                         MultipartFile multipartFile = new MockMultipartFile("file", nameFile, "image/jpeg", photoInputStream);
