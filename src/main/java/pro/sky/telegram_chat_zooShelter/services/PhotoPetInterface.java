@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PhotoPetInterface {
-    void uploadPhotoPet(Long petId, MultipartFile avatarFile) throws IOException;
+    void uploadPhotoPet(Long petId, MultipartFile avatarFile);
 
     PhotoPet findPhotoPet(Long petId);
     List<PhotoPetDTO> getAllPhotoPet(Integer pageNumber, Integer pageSize);

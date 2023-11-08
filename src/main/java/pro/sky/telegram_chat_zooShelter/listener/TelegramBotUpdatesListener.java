@@ -112,7 +112,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         InputStream photoInputStream = new URL("https://api.telegram.org/file/bot"
                                 + telegramBot.getToken() + "/" + file.filePath()).openStream();
                         String localPath = "C:\\Users\\777\\IdeaProjects\\telegram_chat_zooShelter\\photo_pet";
-                        Path localFilePath = Paths.get(localPath, nameFile + ".jpeg");
+                        Path localFilePath = Paths.get(localPath, nameFile + ".jpg");
                         File localFile = localFilePath.toFile();
                         localFile.createNewFile();
                         MultipartFile multipartFile = new MockMultipartFile("file", nameFile, "image/jpeg", photoInputStream);

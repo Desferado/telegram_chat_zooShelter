@@ -41,20 +41,6 @@ public class PhotoPetService implements PhotoPetInterface{
 
     }
 
-    public void uploadPhotoPet(Long petId, MultipartFile file) throws IOException {
-        String nameFile = LocalDate.now() + " Фото питомца с id = " + petId
-                + "." + getExtension(Objects.requireNonNull(file.getOriginalFilename()));
-        Path filePath = Path.of(coversDir, nameFile);
-        try (InputStream is = file.getInputStream();
-             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
-        ) {
-            bis.transferTo(bos);
-        }
-
-    }
-
     private String getExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
@@ -62,28 +48,22 @@ public class PhotoPetService implements PhotoPetInterface{
     public PhotoPet findPhotoPet(Long petId) {
         return photoPetRepository.findPhotoPetByPets_Id(petId);
     }
-    public List<PhotoPet> findAllByPets(Pets pets) {
-        return photoPetRepository.findAllByPets(pets);
-    }
+
     public PhotoPet findPhotoPetByReport_Id(Long reportId) {
         return photoPetRepository.findPhotoPetById(reportId).orElse(new PhotoPet());
     }
 
-    public void savePhoto (Long petId, MultipartFile file) throws IOException{
-        Pets pets = petsService.findPetById(petId);
-        String nameFile = LocalDate.now() + " Фото питомца с id = " + petId
-                + "." + getExtension(Objects.requireNonNull(file.getOriginalFilename()));
-        Path filePath = Path.of(coversDir, nameFile);
-        Files.createDirectories(filePath.getParent());
-        Files.deleteIfExists(filePath);
-        PhotoPet photoPet = findPhotoPet(petId);
-        photoPetRepository.save(photoPet);
-        photoPet.setPets(pets);
-        photoPet.setFilePath(filePath.toString());
-        photoPet.setFileSize(file.getSize());
-        photoPet.setMediaType(file.getContentType());
-        photoPet.setFileName(nameFile);
-        photoPetRepository.save(photoPet);
+    public void uploadPhotoPet (Long petId, MultipartFile file) {
+            Pets pets = petsService.findPetById(petId);
+            String nameFile = file.getOriginalFilename();
+            Path filePath = Path.of(coversDir, nameFile);
+            PhotoPet photoPet = new PhotoPet();
+            photoPet.setPets(pets);
+            photoPet.setFilePath(filePath.toString());
+            photoPet.setFileSize(file.getSize());
+            photoPet.setMediaType(file.getContentType());
+            photoPet.setFileName(nameFile);
+            photoPetRepository.save(photoPet);
     }
     @Override
     public List<PhotoPetDTO> getAllPhotoPet(Integer pageNumber, Integer pageSize) {

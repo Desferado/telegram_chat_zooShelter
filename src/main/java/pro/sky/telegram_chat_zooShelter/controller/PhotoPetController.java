@@ -38,23 +38,23 @@ public class PhotoPetController {
         this.photoPetRepository = photoPetRepository;
     }
     @Operation(
-            summary = "Загрузка фотографии в локальную папку",
+            summary = "Загрузка фотографии в таблицу",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Загрузка фотографии в локальную папку",
+                            description = "Загрузка фотографии в таблицу",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = PhotoPet.class)
                             )
                     )
             })
     @PostMapping(value = "report/{petId}/photoPet", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadPhoto(@PathVariable Long petId,
-                                               @RequestParam MultipartFile photoPet) throws IOException {
-        if (photoPet.getSize() > 1024 * 300){
-            return ResponseEntity.badRequest().body("File is too big.");
+    public ResponseEntity<String> savePhoto(@PathVariable Long petId,
+                                               @RequestParam MultipartFile photoPet)  {
+        if (photoPet == null || photoPet.getSize() > 1024 * 1024){
+            return ResponseEntity.badRequest().body("File is not correct.");
         }
-        photoPetService.savePhoto(petId, photoPet);
+        photoPetService.uploadPhotoPet(petId, photoPet);
         return ResponseEntity.ok().build();
     }
 @Operation(
@@ -81,26 +81,6 @@ public class PhotoPetController {
         }
     }
 
-//    @Operation(
-//            summary = "Загрузка фотографии в базу",
-//            responses = {
-//                    @ApiResponse(
-//                            responseCode = "200",
-//                            description = "Загрузка фотографии в базу",
-//                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-//                                    schema = @Schema(implementation = PhotoPet.class)
-//                            )
-//                    )
-//            })
-//    @PostMapping(value = "report/{petId}/photoPet", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<String> uploadPhotoPet(@PathVariable Long petId,
-//                                               @RequestParam MultipartFile photoPet) throws IOException {
-//        if (photoPet.getSize() > 1024 * 300){
-//            return ResponseEntity.badRequest().body("File is too big.");
-//        }
-//        photoPetService.uploadPhotoPet(petId, photoPet);
-//        return ResponseEntity.ok().build();
-//    }
     @GetMapping
     public ResponseEntity<List<PhotoPetDTO>> getAllPhotoPet(
             @RequestParam("page") Integer pageNumber,
