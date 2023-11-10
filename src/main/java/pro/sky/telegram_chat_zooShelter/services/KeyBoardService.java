@@ -49,7 +49,7 @@ public class KeyBoardService {
     public static InlineKeyboardMarkup prepareKeyboardShelter(String text) {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton button1 = new InlineKeyboardButton("Информацмя о приюте " + text);
+        InlineKeyboardButton button1 = new InlineKeyboardButton("Информация о приюте " + text);
         InlineKeyboardButton button2 = new InlineKeyboardButton("Как взять питомца");
         InlineKeyboardButton button3 = new InlineKeyboardButton("Отправить отчет");
         InlineKeyboardButton button4 = new InlineKeyboardButton("Позвать волонетра");

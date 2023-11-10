@@ -129,7 +129,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         responseOnCommand.responseOnCommandShelter(chatId, greetingTextCat, "кошек");
                         break;
                     case ("DOG"):
-                        responseOnCommand.responseOnCommandShelter(chatId, greetingTextCat, "собак");
+                        responseOnCommand.responseOnCommandShelter(chatId, greetingTextDog, "собак");
                         break;
                     case ("INFO" + "кошек"):
                         responseOnCommand.responseOnCommandInfoShelter(chatId, helloShelter, "кошек");
@@ -156,7 +156,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         responseOnCommand.responseOnCommandText(chatId, contactSecurityDogShelter);
                         break;
                     case ("CALL_VOLUNTEER" + "кошек"), ("CALL_VOLUNTEER" + "собак"):
-                        responseOnCommand.responseOnCommandContactVolunteerShelter(chatId, telegramCustomer, callVolunteer);
+                        responseOnCommand.responseOnCommandContactVolunteerShelter(chatId, telegramCustomer);
                         break;
                     case ("SENDREPORT"):
                         responseOnCommand.responseOnCommandText(chatId, reportShelter);

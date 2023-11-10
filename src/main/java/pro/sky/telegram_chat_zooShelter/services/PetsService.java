@@ -80,10 +80,10 @@ public class PetsService {
         return findPetById(id).getDecisionDate();
 
     }
-    public String getProbationStatus (Long id){
+    public String addPetProbation (Long id){
         return findPetById(id).getProbationStatus();
     }
-    public Integer setAddDays(int addDays, Long id){
+    public Pets setAddDays(int addDays, Long id){
         Pets pet = findPetById(id);
         if (pet.getLimit_probation() == null){
             pet.setLimit_probation(0);
@@ -92,7 +92,7 @@ public class PetsService {
         limit = limit + addDays;
         pet.setLimit_probation(limit);
         updatePet(pet);
-        return limit;
+        return pet;
     }
 }
 

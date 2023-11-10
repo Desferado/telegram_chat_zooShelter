@@ -72,6 +72,28 @@ public class ProbationController {
         return ResponseEntity.ok(pet);
     }
     @Operation(
+            summary = "Увеличение испытательного срока для владельца животного",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Увеличение испытательного срока для владельца животного",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Pets.class)
+                            )
+                    )
+            })
+    @PutMapping("/addDays/{id}")
+    public ResponseEntity<Pets> addPetProbation(
+            @Parameter(description = "Установка испытательного срока для владельца животного по его id")
+            @RequestParam(required = false, name = "номер животного") Long id,
+            @RequestParam(required = false, name = "количество добавляемых дней 14 или 30") int days) {
+        Pets pet = petsService.setAddDays(days, id);
+        if (pet.getDecisionDate() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok(pet);
+    }
+    @Operation(
             summary = "Удаление испытательного срока для владельца животного",
             responses = {
                     @ApiResponse(

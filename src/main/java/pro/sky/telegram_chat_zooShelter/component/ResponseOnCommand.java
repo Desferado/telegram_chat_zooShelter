@@ -55,10 +55,10 @@ public class ResponseOnCommand {
         sendMess.replyMarkup(KeyBoardService.prepareKeyboardInfoShelter(shelter));
         SendResponse response = telegramBot.execute(sendMess);
     }
-    public void responseOnCommandContactVolunteerShelter(long chatId, User telegramCustomer, String nameCustomer){
-        sendMessages.sendMessage(chatId, callVolunteer);
-        sendMessages.sendMessage(1284536796L, "Клиент" + nameCustomer + " нуждается\n" +
+    public void responseOnCommandContactVolunteerShelter(long chatId, User telegramCustomer){
+        sendMessages.sendMessage(1284536796L, "Клиент" + telegramCustomer.firstName() + " нуждается\n" +
                 " в консультации. @" + telegramCustomer.username());
+        sendMessages.sendMessage(chatId, callVolunteer);
     }
     public void responseOnCommandCatRecommendation(Long chatId, String message){
         SendMessage sendMess = new SendMessage(chatId, message);
