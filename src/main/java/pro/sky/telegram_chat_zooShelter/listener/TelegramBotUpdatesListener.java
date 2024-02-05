@@ -65,6 +65,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 null
                         ));
                     }
+                } else if (update.message().text() != null && update.message().text().equals("/help")) {
+                    Long chatId = update.message().chat().id();
+                    nameCustomer = update.message().from().firstName();
+                    responseOnCommandHelp(chatId);
                 }
             } else if (update.callbackQuery() != null) {
                 Long chatId = update.callbackQuery().message().chat().id();
@@ -195,6 +199,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendMessage sendMess = new SendMessage(chatId, "Привет, " + nameCustomer + "!"+ Icon.WAVE_Icon.get()+"\n"
         + "Приют животных Астаны приветствует тебя\n" + "Выбери отдел приюта\n");
         sendMess.replyMarkup(prepareKeyboardStart());
+        SendResponse response = telegramBot.execute(sendMess);
+    }
+    private void responseOnCommandHelp(long chatId) {
+        SendMessage sendMess = new SendMessage(chatId, "Этот бот помогает клиентам взаимодействовать " +
+                "с приютом.\n" +
+                "Для запуска бота отправьте в чат сообщение '/start'." +
+                "И следуйте указаниям его указаниям.");
         SendResponse response = telegramBot.execute(sendMess);
     }
     /***

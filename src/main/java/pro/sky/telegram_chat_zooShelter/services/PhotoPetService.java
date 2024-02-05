@@ -11,6 +11,7 @@ import pro.sky.telegram_chat_zooShelter.repository.PhotoPetRepository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -32,7 +33,7 @@ public class PhotoPetService {
     public void uploadPhotoPet(Long petId, MultipartFile file) throws IOException {
         Pets pets = petsService.findPetById(petId);
 
-        Path filePath = Path.of(coversDir, petId + "." + getExtension(file.getOriginalFilename()));
+        Path filePath = Path.of(coversDir, petId + "." + getExtension(Objects.requireNonNull(file.getOriginalFilename())));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
 
